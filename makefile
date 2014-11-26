@@ -13,6 +13,12 @@ opts-example-2: opts-example-2.o
 opts-example-2.o: opts-example-2.c
 	$(CC) $(CFLAGS) -c -o opts-example-2.o opts-example-2.c
 
+long-opts-example-1: long-opts-example-1.o
+	$(CC) $(CFLAGS) -o long-opts-example-1 long-opts-example-1.o
+
+long-opts-example-1.o: long-opts-example-1.c
+	$(CC) $(CFLAGS) -c -o long-opts-example-1.o long-opts-example-1.c
+
 clean:
 	rm -f *.o
 	rm -f test
