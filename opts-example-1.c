@@ -4,17 +4,17 @@
 
 int main(int argc, char **argv)
 {
-    char optstring[] = ":abc:d";
+    char optstring[] = ":abc:";
     
     int a_flag = 0;
     int b_flag = 0;
-    int d_flag = 0;
 
     char *c_value = NULL;
     
     int result;
     
     opterr = 0;
+    
     
     do
     {
@@ -31,10 +31,7 @@ int main(int argc, char **argv)
             case 'c':   c_value = optarg;
                         break;
             
-            case 'd':   d_flag = 1;
-                        break;
-            
-            case '?':   fprintf(stderr, "Invalid option '-%c'.\n", optopt);
+            case '?':   fprintf(stderr, "Unrecognized option '-%c'.\n", optopt);
                         return 1;
             
             case ':':   fprintf(stderr, "Option '-%c' requires an argument.\n", optopt);
@@ -45,7 +42,6 @@ int main(int argc, char **argv)
     
     printf("Option '-a' = %d\n", a_flag);
     printf("Option '-b' = %d\n", b_flag);
-    printf("Option '-d' = %d\n", d_flag);
     
     printf("Option '-c' value = %s\n", c_value);
     
