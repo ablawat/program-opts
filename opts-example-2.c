@@ -15,6 +15,7 @@ int main(int argc, char **argv)
     
     int result, i;
     
+    
     opterr = 0;
     
     do
@@ -29,7 +30,7 @@ int main(int argc, char **argv)
             case 'b':   b_flag = 1;
                         break;
             
-            case 'c':   c_flag  = 1;
+            case 'c':   c_flag = 1;
                         break;
             
             case 'd':   d_value = optarg;
@@ -38,7 +39,7 @@ int main(int argc, char **argv)
             case 'e':   e_value = optarg;
                         break;
             
-            case '?':   fprintf(stderr, "Invalid option '-%c'.\n", optopt);
+            case '?':   fprintf(stderr, "Unrecognized option '-%c'.\n", optopt);
                         return 1;
             
             case ':':   fprintf(stderr, "Option '-%c' requires an argument.\n", optopt);
@@ -46,7 +47,6 @@ int main(int argc, char **argv)
         }
     }
     while (result != -1);
-    
     
     printf("Option '-a' = %d\n", a_flag);
     printf("Option '-b' = %d\n", b_flag);
