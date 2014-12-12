@@ -1,4 +1,5 @@
 *.o
-opts-example-1
-opts-example-2
+short-opts-example-1
+short-opts-example-2
 long-opts-example-1
+long-opts-example-2
