@@ -1,63 +1,114 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <unistd.h>
+#include <stdint.h>
+
+/* List of available command-line options */
+enum
+{
+    OPT_A = 0x01,  /* Option '-a', bit 0 */
+    OPT_B = 0x02,  /* Option '-b', bit 1 */
+    OPT_C = 0x04,  /* Option '-c', bit 2 */
+    OPT_D = 0x08,  /* Option '-d', bit 3 */
+    OPT_E = 0x10   /* Option '-e', bit 4 */
+};
 
 int main(int argc, char **argv)
 {
+    /*
+    ** String containing the legitimate option characters
+    **
+    ** The first colon character (':') enables detection of missing option argument
+    ** Each single character is an short option (ex. 'a' enables '-a' option)
+    ** Each single character followed by a colon is a short option that requires an argument (ex. 'd:')
+    */
     char optstring[] = ":abcd:e:";
     
-    int a_flag = 0;
-    int b_flag = 0;
-    int c_flag = 0;
-
-    char *d_value = NULL;
-    char *e_value = NULL;
+    /* Variable containing bit flags for options */
+    uint8_t options = 0x00;
+    
+    /* Pointers to '-d' and '-e' option arguments */
+    char *opt_d_arg = NULL;
+    char *opt_e_arg = NULL;
     
     int result, i;
     
-    
+    /* Disable error messages */
     opterr = 0;
     
     do
     {
+        /* Read next command-line argument */
         result = getopt(argc, argv, optstring);
         
         switch (result)
         {
-            case 'a':   a_flag = 1;
+            /* Option '-a' was passed */
+            case 'a':   options |= OPT_A;
                         break;
             
-            case 'b':   b_flag = 1;
+            /* Option '-b' was passed */
+            case 'b':   options |= OPT_B;
                         break;
             
-            case 'c':   c_flag = 1;
+            /* Option '-c' was passed */
+            case 'c':   options |= OPT_C;
                         break;
             
-            case 'd':   d_value = optarg;
+            /* Option '-d' was passed */
+            case 'd':   options |= OPT_D;
+                        opt_d_arg = optarg;
                         break;
             
-            case 'e':   e_value = optarg;
+            /* Option '-e' was passed */
+            case 'e':   options |= OPT_E;
+                        opt_e_arg = optarg;
                         break;
             
-            case '?':   fprintf(stderr, "Unrecognized option '-%c'.\n", optopt);
-                        return 1;
-            
-            case ':':   fprintf(stderr, "Option '-%c' requires an argument.\n", optopt);
+            /* Unrecognized option was passed */
+            case '?':   fprintf(stderr, "Error: Unrecognized option '-%c'\n", optopt);
+                        return 1;         
+            /* Option that requires an argument was passed, but an argument is missing */
+            case ':':   fprintf(stderr, "Error: Option '-%c' requires an argument\n", optopt);
                         return 1;
         }
     }
     while (result != -1);
     
-    printf("Option '-a' = %d\n", a_flag);
-    printf("Option '-b' = %d\n", b_flag);
-    printf("Option '-c' = %d\n", c_flag);
+    /* Checks if bit flag for option '-a' is set */
+    if (options & OPT_A)
+    {
+        puts("Option '-a' is set");
+    }
     
-    printf("Option '-d' value = %s\n", d_value);
-    printf("Option '-e' value = %s\n", e_value);
+    /* Checks if bit flag for option '-b' is set */
+    if (options & OPT_B)
+    {
+        puts("Option '-b' is set");
+    }
     
+    /* Checks if bit flag for option '-c' is set */
+    if (options & OPT_C)
+    {
+        puts("Option '-c' is set");
+    }
+    
+    /* Checks if bit flag for option '-d' is set */
+    if (options & OPT_D)
+    {
+        printf("Option '-d' is set with argument '%s'\n", opt_d_arg);
+    }
+    
+    /* Checks if bit flag for option '-e' is set */
+    if (options & OPT_E)
+    {
+        printf("Option '-e' is set with argument '%s'\n", opt_e_arg);
+    }
+    
+    /* Print argv-elements that are not an options */
     for (i = optind; i < argc; i++)
     {
-        printf("No option arg = %s\n", argv[i]);
+        printf("No option argument '%s'\n", argv[i]);
     }
     
     return 0;
