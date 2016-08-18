@@ -30,5 +30,5 @@ long-opts-example-2.o: long-opts-example-2.c
 
 
 clean:
-	rm -f opts-example-1 opts-example-2 long-opts-example-1 long-opts-example-2
+	rm -f short-opts-example-1 short-opts-example-2 long-opts-example-1 long-opts-example-2
 	rm -f *.o
