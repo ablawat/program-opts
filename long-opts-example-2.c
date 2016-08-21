@@ -46,7 +46,7 @@ int main(int argc, char **argv)
         {0, 0, 0, 0}                          /* Termination entry */
     };
     
-    int result, i;
+    int result;
     
     do
     {
@@ -135,7 +135,7 @@ int main(int argc, char **argv)
     }
     
     /* Print argv-elements that are not an options */
-    for (i = optind; i < argc; i++)
+    for (int i = optind; i < argc; i++)
     {
         printf("No option argument '%s'\n", argv[i]);
     }

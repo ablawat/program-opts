@@ -1,6 +1,6 @@
 #include <stdio.h>
 #include <stdlib.h>
-#include <unistd.h>
+#include <getopt.h>
 #include <stdint.h>
 
 /* List of available command-line options */
@@ -31,7 +31,7 @@ int main(int argc, char **argv)
     char *opt_d_arg = NULL;
     char *opt_e_arg = NULL;
     
-    int result, i;
+    int result;
     
     /* Disable error messages */
     opterr = 0;
@@ -106,7 +106,7 @@ int main(int argc, char **argv)
     }
     
     /* Print argv-elements that are not an options */
-    for (i = optind; i < argc; i++)
+    for (int i = optind; i < argc; i++)
     {
         printf("No option argument '%s'\n", argv[i]);
     }
