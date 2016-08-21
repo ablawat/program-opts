@@ -6,9 +6,9 @@
 /* List of available command-line options */
 enum
 {
-    OPT_A = 0x01,  /* Option '-a' or '--opta', bit 0 */
-    OPT_B = 0x02,  /* Option '-b' or '--optb', bit 1 */
-    OPT_C = 0x04   /* Option '-c' or '--optc', bit 2 */
+    OPT_A = 0x01,  /* Option '-a' and '--opta', bit 0 */
+    OPT_B = 0x02,  /* Option '-b' and '--optb', bit 1 */
+    OPT_C = 0x04   /* Option '-c' and '--optc', bit 2 */
 };
 
 int main(int argc, char **argv)
@@ -25,7 +25,7 @@ int main(int argc, char **argv)
     /* Variable containing bit flags for options */
     uint8_t options = 0x00;
     
-    /* Pointer to '-c' option argument */
+    /* Pointer to '-c' and '--optc' option argument */
     char *opt_c_arg = NULL;
     
     /*

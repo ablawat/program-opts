@@ -6,11 +6,11 @@
 /* List of available command-line options */
 enum
 {
-    OPT_A = 0x01,  /* Option '-a' or '--opta', bit 0 */
-    OPT_B = 0x02,  /* Option '-b' or '--optb', bit 1 */
-    OPT_C = 0x04,  /* Option '-c' or '--optc', bit 2 */
-    OPT_D = 0x08,  /* Option '-d' or '--optd', bit 3 */
-    OPT_E = 0x10   /* Option '-e' or '--opte', bit 4 */
+    OPT_A = 0x01,  /* Option '-a' and '--opta', bit 0 */
+    OPT_B = 0x02,  /* Option '-b' and '--optb', bit 1 */
+    OPT_C = 0x04,  /* Option '-c' and '--optc', bit 2 */
+    OPT_D = 0x08,  /* Option '-d' and '--optd', bit 3 */
+    OPT_E = 0x10   /* Option '-e' and '--opte', bit 4 */
 };
 
 int main(int argc, char **argv)
