@@ -28,20 +28,20 @@ enum
 /* Command-line options */
 typedef struct options
 {
-    char      * args[OPT_ARGS_NUM];    /* Arguments for options */
-    uint64_t    flags;                 /* Bit flags for options */
+    char      * arguments[OPT_ARGS_NUM];    /* Arguments for options */
+    uint64_t    status;                     /* Bit flags for options */
 }
 options_t;
 
 status_t get_opts(int argc, char **argv, char *error_option);
 
-bool is_set_opt_a();
-bool is_set_opt_b();
-bool is_set_opt_c();
-bool is_set_opt_d();
-bool is_set_opt_e();
+#define is_set_opt_a() (options.status & OPT_A)
+#define is_set_opt_b() (options.status & OPT_B)
+#define is_set_opt_c() (options.status & OPT_C)
+#define is_set_opt_d() (options.status & OPT_D)
+#define is_set_opt_e() (options.status & OPT_E)
 
-char * get_arg_d();
-char * get_arg_e();
+#define get_arg_d() (options.arguments[OPT_D_ARG])
+#define get_arg_e() (options.arguments[OPT_E_ARG])
 
 #endif

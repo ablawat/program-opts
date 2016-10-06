@@ -8,41 +8,6 @@
 /* X */
 options_t options;
 
-inline bool is_set_opt_a()
-{
-    return options.flags & OPT_A;
-}
-
-inline bool is_set_opt_b()
-{
-    return options.flags & OPT_B;
-}
-
-inline bool is_set_opt_c()
-{
-    return options.flags & OPT_C;
-}
-
-inline bool is_set_opt_d()
-{
-    return options.flags & OPT_D;
-}
-
-inline bool is_set_opt_e()
-{
-    return options.flags & OPT_E;
-}
-
-inline char * get_arg_d()
-{
-    return options.args[OPT_D_ARG];
-}
-
-inline char * get_arg_e()
-{
-    return options.args[OPT_E_ARG];
-}
-
 status_t get_opts(int argc, char **argv, char *error_option)
 {
     /* Option characters */
