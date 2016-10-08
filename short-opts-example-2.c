@@ -1,7 +1,8 @@
 #include <stdio.h>
 #include <stdlib.h>
-#include <getopt.h>
 #include <stdint.h>
+#include <getopt.h>
+#include <stdbool.h>
 
 /* List of available command-line options */
 enum
@@ -31,16 +32,22 @@ int main(int argc, char **argv)
     char *opt_d_arg = NULL;
     char *opt_e_arg = NULL;
     
-    int result;
-    
     /* Disable error messages */
     opterr = 0;
     
-    do
+    while (true)
     {
         /* Read next command-line argument */
-        result = getopt(argc, argv, optstring);
+        int result = getopt(argc, argv, optstring);
         
+        /* If all options has beed read */
+        if (result == -1)
+        {
+            /* Terminate processing */
+            break;
+        }
+        
+        /* Process option */
         switch (result)
         {
             /* Option '-a' was passed */
@@ -67,13 +74,17 @@ int main(int argc, char **argv)
             
             /* Unrecognized option was passed */
             case '?':   fprintf(stderr, "Error: Unrecognized option '-%c'\n", optopt);
-                        return 1;         
+                        return 1;
+            
             /* Option that requires an argument was passed, but an argument is missing */
             case ':':   fprintf(stderr, "Error: Option '-%c' requires an argument\n", optopt);
                         return 1;
+            
+            /* Unsupported option was passed */
+            default:    fprintf(stderr, "Error: Unsupported option '-%c'\n", result);
+                        return 1;
         }
     }
-    while (result != -1);
     
     /* Checks if bit flag for option '-a' is set */
     if (options & OPT_A)

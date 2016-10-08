@@ -2,6 +2,7 @@
 #include <stdlib.h>
 #include <stdint.h>
 #include <getopt.h>
+#include <stdbool.h>
 
 /* List of available command-line options */
 enum
@@ -36,7 +37,7 @@ int main(int argc, char **argv)
     **
     ** Each entry defines one long option and links it to corresponding short option
     */
-    struct option long_options[] =
+    struct option options_long[] =
     {
         {"opta", no_argument,       0, 'a'},  /* Long option name 'opta', short name 'a' */
         {"optb", no_argument,       0, 'b'},  /* Long option name 'optb', short name 'b' */
@@ -46,13 +47,19 @@ int main(int argc, char **argv)
         {0, 0, 0, 0}                          /* Termination entry */
     };
     
-    int result;
-    
-    do
+    while (true)
     {
         /* Read next command-line option */
-        result = getopt_long(argc, argv, optstring, long_options, NULL);
+        int result = getopt_long(argc, argv, optstring, options_long, NULL);
         
+        /* If all options has beed read */
+        if (result == -1)
+        {
+            /* Terminate processing */
+            break;
+        }
+        
+        /* Process option */
         switch (result)
         {
             /* Option '-a' or '--opta' was passed */
@@ -100,9 +107,20 @@ int main(int argc, char **argv)
                         }
                         
                         return 1;
+            
+            /* Unsupported option was passed */
+            default:    if (optopt != 0)
+                        {
+                            fprintf(stderr, "Error: Unsupported option '-%c'\n", result);
+                        }
+                        else
+                        {
+                            fprintf(stderr, "Error: Unsupported option '%s'\n", argv[optind - 1]);
+                        }
+                        
+                        return 1;
         }
     }
-    while (result != -1);
     
     /* Checks if bit flag for option '-a' and '--opta' is set */
     if (options & OPT_A)
