@@ -4,7 +4,7 @@
 #include <getopt.h>
 #include <stdbool.h>
 
-/* List of available command-line options */
+/* Available command-line options */
 enum
 {
     OPT_A = 0x01,  /* Option '-a' and '--opta', bit 0 */
@@ -25,12 +25,15 @@ int main(int argc, char **argv)
     */
     char optstring[] = ":abcd:e:";
     
-    /* Variable containing bit flags for options */
+    /* Bit flags for options */
     uint8_t options = 0x00;
     
-    /* Pointers to '-d' and '-e' option arguments */
+    /* Pointers to '-d', '--optd' and '-e', '--opte' option arguments */
     char *opt_d_arg = NULL;
     char *opt_e_arg = NULL;
+    
+    /* Was next option read */
+    bool is_next_opt = true;
     
     /*
     ** Array of long options definitions
@@ -47,78 +50,80 @@ int main(int argc, char **argv)
         {0, 0, 0, 0}                          /* Termination entry */
     };
     
-    while (true)
+    while (is_next_opt)
     {
         /* Read next command-line option */
         int result = getopt_long(argc, argv, optstring, options_long, NULL);
         
-        /* If all options has beed read */
-        if (result == -1)
+        /* Next option has been read */
+        if (result != -1)
         {
-            /* Terminate processing */
-            break;
+            /* Process option */
+            switch (result)
+            {
+                /* Option '-a' or '--opta' was passed */
+                case 'a':   options |= OPT_A;
+                            break;
+                
+                /* Option '-b' or '--optb' was passed */
+                case 'b':   options |= OPT_B;
+                            break;
+                
+                /* Option '-c' or '--optc' was passed */
+                case 'c':   options |= OPT_C;
+                            break;
+                
+                /* Option '-d' or '--optd' was passed */
+                case 'd':   options |= OPT_D;
+                            opt_d_arg = optarg;
+                            break;
+                
+                /* Option '-e' or '--opte' was passed */
+                case 'e':   options |= OPT_E;
+                            opt_e_arg = optarg;
+                            break;
+                
+                /* Unrecognized option was passed */
+                case '?':   if (optopt != 0)
+                            {
+                                fprintf(stderr, "Error: Unrecognized option '-%c'\n", optopt);
+                            }
+                            else
+                            {
+                                fprintf(stderr, "Error: Unrecognized option '%s'\n", argv[optind - 1]);
+                            }
+                            
+                            return 1;
+                
+                /* Option that requires an argument was passed, but an argument is missing */
+                case ':':   if (*(argv[optind - 1] + 1) != '-')
+                            {
+                                fprintf(stderr, "Error: Option '-%c' requires an argument\n", optopt);
+                            }
+                            else
+                            {
+                                fprintf(stderr, "Error: Option '%s' requires an argument\n", argv[optind - 1]);
+                            }
+                            
+                            return 1;
+                
+                /* Unsupported option was passed */
+                default:    if (optopt != 0)
+                            {
+                                fprintf(stderr, "Error: Unsupported option '-%c'\n", result);
+                            }
+                            else
+                            {
+                                fprintf(stderr, "Error: Unsupported option '%s'\n", argv[optind - 1]);
+                            }
+                            
+                            return 1;
+            }
         }
-        
-        /* Process option */
-        switch (result)
+        else
         {
-            /* Option '-a' or '--opta' was passed */
-            case 'a':   options |= OPT_A;
-                        break;
-            
-            /* Option '-b' or '--optb' was passed */
-            case 'b':   options |= OPT_B;
-                        break;
-            
-            /* Option '-c' or '--optc' was passed */
-            case 'c':   options |= OPT_C;
-                        break;
-            
-            /* Option '-d' or '--optd' was passed */
-            case 'd':   options |= OPT_D;
-                        opt_d_arg = optarg;
-                        break;
-            
-            /* Option '-e' or '--opte' was passed */
-            case 'e':   options |= OPT_E;
-                        opt_e_arg = optarg;
-                        break;
-            
-            /* Unrecognized option was passed */
-            case '?':   if (optopt != 0)
-                        {
-                            fprintf(stderr, "Error: Unrecognized option '-%c'\n", optopt);
-                        }
-                        else
-                        {
-                            fprintf(stderr, "Error: Unrecognized option '%s'\n", argv[optind - 1]);
-                        }
-                        
-                        return 1;
-            
-            /* Option that requires an argument was passed, but an argument is missing */
-            case ':':   if (*(argv[optind - 1] + 1) != '-')
-                        {
-                            fprintf(stderr, "Error: Option '-%c' requires an argument\n", optopt);
-                        }
-                        else
-                        {
-                            fprintf(stderr, "Error: Option '%s' requires an argument\n", argv[optind - 1]);
-                        }
-                        
-                        return 1;
-            
-            /* Unsupported option was passed */
-            default:    if (optopt != 0)
-                        {
-                            fprintf(stderr, "Error: Unsupported option '-%c'\n", result);
-                        }
-                        else
-                        {
-                            fprintf(stderr, "Error: Unsupported option '%s'\n", argv[optind - 1]);
-                        }
-                        
-                        return 1;
+            /* End of options */
+            is_next_opt = false;
         }
     }
     
