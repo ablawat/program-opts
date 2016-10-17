@@ -16,14 +16,17 @@ enum
     OPT_E = 0x10   /* Option '-e', bit 4 */
 };
 
-/* Command-line options with argument */
+/* Command-line options with required argument */
 enum
 {
-    OPT_D_ARG,    /* Option '-d' argument */
-    OPT_E_ARG,    /* Option '-e' argument */
+    OPT_D_ARG,    /* Option '-d' requires argument */
+    OPT_E_ARG,    /* Option '-e' requires argument */
     
-    OPT_ARGS_NUM  /* Number of option arguments */
+    OPT_ARGS_NUM  /* Number of options with required argument */
 };
+
+/* Option charakters */
+#define OPTIONS_STR ":abcd:e:"
 
 /* Command-line options */
 typedef struct options
@@ -33,15 +36,20 @@ typedef struct options
 }
 options_t;
 
-status_t get_opts(int argc, char **argv, char *error_option);
+/* Program Options */
+extern options_t options;
 
-#define is_set_opt_a() (options.status & OPT_A)
-#define is_set_opt_b() (options.status & OPT_B)
-#define is_set_opt_c() (options.status & OPT_C)
-#define is_set_opt_d() (options.status & OPT_D)
-#define is_set_opt_e() (options.status & OPT_E)
+status_t get_options(int argc, char **argv, char *error_option);
 
-#define get_arg_d() (options.arguments[OPT_D_ARG])
-#define get_arg_e() (options.arguments[OPT_E_ARG])
+/* Get option status */
+#define is_set_option_a() (options.status & OPT_A)
+#define is_set_option_b() (options.status & OPT_B)
+#define is_set_option_c() (options.status & OPT_C)
+#define is_set_option_d() (options.status & OPT_D)
+#define is_set_option_e() (options.status & OPT_E)
+
+/* Get option argument */
+#define get_option_arg_d() (options.arguments[OPT_D_ARG])
+#define get_option_arg_e() (options.arguments[OPT_E_ARG])
 
 #endif
