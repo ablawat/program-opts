@@ -9,7 +9,7 @@ int main(int argc, char **argv)
 {
     char error_option;
     
-    status_t status = get_options(argc, argv, &error_option);
+    status_t status = options_get(argc, argv, &error_option);
     
     if (status == STATUS_ERROR1)
     {

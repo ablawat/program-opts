@@ -36,20 +36,20 @@ typedef struct options
 }
 options_t;
 
-/* Program Options */
-extern options_t options;
+/* Main Program Options */
+extern options_t program_options;
 
-status_t get_options(int argc, char **argv, char *error_option);
+status_t options_get(int argc, char **argv, char *error_option);
 
 /* Get option status */
-#define is_set_option_a() (options.status & OPT_A)
-#define is_set_option_b() (options.status & OPT_B)
-#define is_set_option_c() (options.status & OPT_C)
-#define is_set_option_d() (options.status & OPT_D)
-#define is_set_option_e() (options.status & OPT_E)
+#define is_set_option_a() (program_options.status & OPT_A)
+#define is_set_option_b() (program_options.status & OPT_B)
+#define is_set_option_c() (program_options.status & OPT_C)
+#define is_set_option_d() (program_options.status & OPT_D)
+#define is_set_option_e() (program_options.status & OPT_E)
 
 /* Get option argument */
-#define get_option_arg_d() (options.arguments[OPT_D_ARG])
-#define get_option_arg_e() (options.arguments[OPT_E_ARG])
+#define get_option_arg_d() (program_options.arguments[OPT_D_ARG])
+#define get_option_arg_e() (program_options.arguments[OPT_E_ARG])
 
 #endif
