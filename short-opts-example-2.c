@@ -1,9 +1,10 @@
 #include <stdio.h>
 #include <stdlib.h>
-#include <getopt.h>
 #include <stdint.h>
+#include <getopt.h>
+#include <stdbool.h>
 
-/* List of available command-line options */
+/* Available command-line options */
 enum
 {
     OPT_A = 0x01,  /* Option '-a', bit 0 */
@@ -24,56 +25,71 @@ int main(int argc, char **argv)
     */
     char optstring[] = ":abcd:e:";
     
-    /* Variable containing bit flags for options */
+    /* Bit flags for options */
     uint8_t options = 0x00;
     
     /* Pointers to '-d' and '-e' option arguments */
     char *opt_d_arg = NULL;
     char *opt_e_arg = NULL;
     
-    int result;
+    /* Was next option read */
+    bool is_next_opt = true;
     
     /* Disable error messages */
     opterr = 0;
     
-    do
+    while (is_next_opt)
     {
         /* Read next command-line argument */
-        result = getopt(argc, argv, optstring);
+        int result = getopt(argc, argv, optstring);
         
-        switch (result)
+        /* Next option has been read */
+        if (result != -1)
         {
-            /* Option '-a' was passed */
-            case 'a':   options |= OPT_A;
-                        break;
-            
-            /* Option '-b' was passed */
-            case 'b':   options |= OPT_B;
-                        break;
-            
-            /* Option '-c' was passed */
-            case 'c':   options |= OPT_C;
-                        break;
-            
-            /* Option '-d' was passed */
-            case 'd':   options |= OPT_D;
-                        opt_d_arg = optarg;
-                        break;
-            
-            /* Option '-e' was passed */
-            case 'e':   options |= OPT_E;
-                        opt_e_arg = optarg;
-                        break;
-            
-            /* Unrecognized option was passed */
-            case '?':   fprintf(stderr, "Error: Unrecognized option '-%c'\n", optopt);
-                        return 1;         
-            /* Option that requires an argument was passed, but an argument is missing */
-            case ':':   fprintf(stderr, "Error: Option '-%c' requires an argument\n", optopt);
-                        return 1;
+            /* Process option */
+            switch (result)
+            {
+                /* Option '-a' was passed */
+                case 'a':   options |= OPT_A;
+                            break;
+                
+                /* Option '-b' was passed */
+                case 'b':   options |= OPT_B;
+                            break;
+                
+                /* Option '-c' was passed */
+                case 'c':   options |= OPT_C;
+                            break;
+                
+                /* Option '-d' was passed */
+                case 'd':   options |= OPT_D;
+                            opt_d_arg = optarg;
+                            break;
+                
+                /* Option '-e' was passed */
+                case 'e':   options |= OPT_E;
+                            opt_e_arg = optarg;
+                            break;
+                
+                /* Unrecognized option was passed */
+                case '?':   fprintf(stderr, "Error: Unrecognized option '-%c'\n", optopt);
+                            return 1;
+                
+                /* Option that requires an argument was passed, but an argument is missing */
+                case ':':   fprintf(stderr, "Error: Option '-%c' requires an argument\n", optopt);
+                            return 1;
+                
+                /* Unsupported option was passed */
+                default:    fprintf(stderr, "Error: Unsupported option '-%c'\n", result);
+                            return 1;
+            }
+        }
+        else
+        {
+            /* End of options */
+            is_next_opt = false;
         }
     }
-    while (result != -1);
     
     /* Checks if bit flag for option '-a' is set */
     if (options & OPT_A)
