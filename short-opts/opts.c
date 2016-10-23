@@ -15,11 +15,13 @@ options_t program_options;
 */
 void options_init(void)
 {
+    /* Clear all options arguments */
     for (int i = 0; i < OPT_ARGS_NUM; i++)
     {
         program_options.arguments[i] = NULL;
     }
     
+    /* Clear all options status */
     program_options.status = 0;
 }
 
@@ -30,71 +32,80 @@ void options_init(void)
 */
 status_t options_get(int argc, char **argv, char *error_option)
 {
-    /* Return value */
+    /* Set default return status */
     status_t status = STATUS_OK;
     
-    /* Initialize options data */
-    options_init();
-    
-    /* Was next option read */
-    bool is_next_opt = true;
-    
-    /* Disable error messages */
-    opterr = 0;
-    
-    while (is_next_opt)
+    /* Check output parameter */
+    if (error_option != NULL)
     {
-        /* Read next command-line argument */
-        int result = getopt(argc, argv, OPTIONS_STR);
+        /* Initialize options data */
+        options_init();
         
-        /* Next option has been read */
-        if (result != -1)
+        /* Was next option read */
+        bool is_next_opt = true;
+        
+        /* Disable error messages */
+        opterr = 0;
+        
+        while (is_next_opt)
         {
-            /* Process option */
-            switch (result)
+            /* Read next command-line argument */
+            int result = getopt(argc, argv, OPTIONS_STR);
+            
+            /* Next option has been read */
+            if (result != -1)
             {
-                /* Option '-a' was passed */
-                case 'a':   program_options.status |= OPT_A;
-                            break;
-                
-                /* Option '-b' was passed */
-                case 'b':   program_options.status |= OPT_B;
-                            break;
-                
-                /* Option '-c' was passed */
-                case 'c':   program_options.status |= OPT_C;
-                            break;
-                
-                /* Option '-d' was passed */
-                case 'd':   program_options.status |= OPT_D;
-                            program_options.arguments[OPT_D_ARG] = optarg;
-                            break;
-                
-                /* Option '-e' was passed */
-                case 'e':   program_options.status |= OPT_E;
-                            program_options.arguments[OPT_E_ARG] = optarg;
-                            break;
-                
-                /* Unrecognized option was passed */
-                case '?':   *error_option = optopt;
-                            status = STATUS_ERROR1;
-                            break;
-                
-                /* Option with missing argument was passed */
-                case ':':   *error_option = optopt;
-                            status = STATUS_ERROR2;
-                            break;
-                
-                /* Unsupported option was passed */
-                default:    *error_option = result;
-                            status = STATUS_ERROR3;
+                /* Process option */
+                switch (result)
+                {
+                    /* Option '-a' was passed */
+                    case 'a':   program_options.status |= OPT_A;
+                                break;
+                    
+                    /* Option '-b' was passed */
+                    case 'b':   program_options.status |= OPT_B;
+                                break;
+                    
+                    /* Option '-c' was passed */
+                    case 'c':   program_options.status |= OPT_C;
+                                break;
+                    
+                    /* Option '-d' was passed */
+                    case 'd':   program_options.status |= OPT_D;
+                                program_options.arguments[OPT_D_ARG] = optarg;
+                                break;
+                    
+                    /* Option '-e' was passed */
+                    case 'e':   program_options.status |= OPT_E;
+                                program_options.arguments[OPT_E_ARG] = optarg;
+                                break;
+                    
+                    /* Unrecognized option was passed */
+                    case '?':   *error_option = optopt;
+                                status = STATUS_ERROR1;
+                                break;
+                    
+                    /* Option with missing argument was passed */
+                    case ':':   *error_option = optopt;
+                                status = STATUS_ERROR2;
+                                break;
+                    
+                    /* Unsupported option was passed */
+                    default:    *error_option = result;
+                                status = STATUS_ERROR3;
+                }
+            }
+            else
+            {
+                /* End of options */
+                is_next_opt = false;
             }
         }
-        else
-        {
-            /* End of options */
-            is_next_opt = false;
-        }
+    }
+    else
+    {
+        /* Set argument error */
+        status = STATUS_NOT_OK;
     }
     
     return status;

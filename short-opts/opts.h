@@ -25,10 +25,10 @@ enum
     OPT_ARGS_NUM  /* Number of options with required argument */
 };
 
-/* Option charakters */
+/* Short option charakters */
 #define OPTIONS_STR ":abcd:e:"
 
-/* Command-line options */
+/* Command-line options data */
 typedef struct options
 {
     char      * arguments[OPT_ARGS_NUM];    /* Arguments for options */
@@ -39,6 +39,7 @@ options_t;
 /* Main Program Options */
 extern options_t program_options;
 
+/* Get all command-line options */
 status_t options_get(int argc, char **argv, char *error_option);
 
 /* Get option status */
