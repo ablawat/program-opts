@@ -1,14 +1,14 @@
 CC     = gcc
 CFLAGS = -O2
 
-short-opts: main.o opts.o
-	$(CC) $(CFLAGS) -o short-opts main.o opts.o
+short-opts: main.o options.o
+	$(CC) $(CFLAGS) -o short-opts main.o options.o
 
 main.o: main.c
 	$(CC) $(CFLAGS) -c -o main.o main.c
 
-opts.o: opts.c opts.h
-	$(CC) $(CFLAGS) -c -o opts.o opts.c
+options.o: options.c options.h
+	$(CC) $(CFLAGS) -c -o options.o options.c
 
 clean:
 	rm -f short-opts

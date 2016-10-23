@@ -3,7 +3,7 @@
 #include <stdio.h>
 
 #include "status.h"
-#include "opts.h"
+#include "options.h"
 
 int main(int argc, char **argv)
 {

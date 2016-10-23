@@ -3,7 +3,7 @@
 #include <stdint.h>
 
 #include "status.h"
-#include "opts.h"
+#include "options.h"
 
 /* Main Program Options */
 options_t program_options;
