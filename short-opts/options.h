@@ -25,7 +25,7 @@ enum
     OPT_ARGS_NUM  /* Number of options with required argument */
 };
 
-/* Short option charakters */
+/* Short option characters */
 #define OPTIONS_STR ":abcd:e:"
 
 /* Command-line options data */
@@ -43,14 +43,14 @@ extern options_t program_options;
 status_t options_get(int argc, char **argv, char *error_option);
 
 /* Get option status */
-#define is_set_option_a() (program_options.status & OPT_A)
-#define is_set_option_b() (program_options.status & OPT_B)
-#define is_set_option_c() (program_options.status & OPT_C)
-#define is_set_option_d() (program_options.status & OPT_D)
-#define is_set_option_e() (program_options.status & OPT_E)
+bool is_set_option_a();
+bool is_set_option_b();
+bool is_set_option_c();
+bool is_set_option_d();
+bool is_set_option_e();
 
 /* Get option argument */
-#define get_option_arg_d() (program_options.arguments[OPT_D_ARG])
-#define get_option_arg_e() (program_options.arguments[OPT_E_ARG])
+char * get_option_arg_d();
+char * get_option_arg_e();
 
 #endif

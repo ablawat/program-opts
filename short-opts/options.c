@@ -110,3 +110,108 @@ status_t options_get(int argc, char **argv, char *error_option)
     
     return status;
 }
+
+/*
+** Function: is_set_option_a
+** ----------------------
+** Checks if option 'a' is set
+*/
+inline bool is_set_option_a()
+{
+    bool status = false;
+    
+    if (program_options.status & OPT_A)
+    {
+        status = true;
+    }
+    
+    return status;
+}
+
+/*
+** Function: is_set_option_b
+** ----------------------
+** Checks if option 'b' is set
+*/
+inline bool is_set_option_b()
+{
+    bool status = false;
+    
+    if (program_options.status & OPT_B)
+    {
+        status = true;
+    }
+    
+    return status;
+}
+
+/*
+** Function: is_set_option_c
+** ----------------------
+** Checks if option 'c' is set
+*/
+inline bool is_set_option_c()
+{
+    bool status = false;
+    
+    if (program_options.status & OPT_C)
+    {
+        status = true;
+    }
+    
+    return status;
+}
+
+/*
+** Function: is_set_option_d
+** ----------------------
+** Checks if option 'd' is set
+*/
+inline bool is_set_option_d()
+{
+    bool status = false;
+    
+    if (program_options.status & OPT_D)
+    {
+        status = true;
+    }
+    
+    return status;
+}
+
+/*
+** Function: is_set_option_e
+** ----------------------
+** Checks if option 'e' is set
+*/
+inline bool is_set_option_e()
+{
+    bool status = false;
+    
+    if (program_options.status & OPT_E)
+    {
+        status = true;
+    }
+    
+    return status;
+}
+
+/*
+** Function: get_option_arg_d
+** ----------------------
+** Returns pointer to option 'd' argument
+*/
+inline char * get_option_arg_d()
+{
+    return program_options.arguments[OPT_D_ARG];
+}
+
+/*
+** Function: get_option_arg_e
+** ----------------------
+** Returns pointer to option 'e' argument
+*/
+inline char * get_option_arg_e()
+{
+    return program_options.arguments[OPT_E_ARG];
+}
