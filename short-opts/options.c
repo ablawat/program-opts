@@ -105,7 +105,7 @@ status_t options_get(int argc, char **argv, char *error_option)
     else
     {
         /* Set argument error */
-        status = STATUS_NOT_OK;
+        status = STATUS_INCORRECT_ARGUMENT;
     }
     
     return status;
