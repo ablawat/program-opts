@@ -11,20 +11,25 @@ int main(int argc, char **argv)
     
     status_t status = options_get(argc, argv, &error_option);
     
-    if (status == STATUS_ERROR1)
+    switch (status)
     {
-        fprintf(stderr, "Error: Unrecognized option '-%c'\n", error_option);
-        return 1;
-    }
-    else if (status == STATUS_ERROR2)
-    {
-        fprintf(stderr, "Error: Option '-%c' requires an argument\n", error_option);
-        return 1;
-    }
-    else if (status == STATUS_ERROR3)
-    {
-        fprintf(stderr, "Error: Unsupported option '-%c'\n", error_option);
-        return 1;
+        case STATUS_ERROR_UNRECOGNIZED_OPTION:
+        {
+            fprintf(stderr, "Error: Unrecognized option '-%c'\n", error_option);
+            return 1;
+        }
+        
+        case STATUS_ERROR_MISSING_OPTION_ARG:
+        {
+            fprintf(stderr, "Error: Option '-%c' requires an argument\n", error_option);
+            return 1;
+        }
+        
+        case STATUS_ERROR_UNSUPPORTED_OPTION:
+        {
+            fprintf(stderr, "Error: Unsupported option '-%c'\n", error_option);
+            return 1;
+        }
     }
     
     /* Checks if bit flag for option '-a' is set */

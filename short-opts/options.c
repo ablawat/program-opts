@@ -82,17 +82,17 @@ status_t options_get(int argc, char **argv, char *error_option)
                     
                     /* Unrecognized option was passed */
                     case '?':   *error_option = optopt;
-                                status = STATUS_ERROR1;
+                                status = STATUS_ERROR_UNRECOGNIZED_OPTION;
                                 break;
                     
                     /* Option with missing argument was passed */
                     case ':':   *error_option = optopt;
-                                status = STATUS_ERROR2;
+                                status = STATUS_ERROR_MISSING_OPTION_ARG;
                                 break;
                     
                     /* Unsupported option was passed */
                     default:    *error_option = result;
-                                status = STATUS_ERROR3;
+                                status = STATUS_ERROR_UNSUPPORTED_OPTION;
                 }
             }
             else
@@ -105,7 +105,7 @@ status_t options_get(int argc, char **argv, char *error_option)
     else
     {
         /* Set argument error */
-        status = STATUS_INCORRECT_ARGUMENT;
+        status = STATUS_ERROR_INCORRECT_ARGUMENT;
     }
     
     return status;
