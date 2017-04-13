@@ -4,9 +4,9 @@
 #include <stdbool.h>
 #include <stdint.h>
 
-#include "status.h"
+#include "result.h"
 
-/* Available command-line options */
+/* Available Command-Line Options */
 enum
 {
     OPT_A = 0x01,  /* Option '-a', bit 0 */
@@ -16,7 +16,7 @@ enum
     OPT_E = 0x10   /* Option '-e', bit 4 */
 };
 
-/* Command-line options with required argument */
+/* Command-Line Options with Required Argument */
 enum
 {
     OPT_D_ARG,    /* Option '-d' requires argument */
@@ -25,10 +25,14 @@ enum
     OPT_ARGS_NUM  /* Number of options with required argument */
 };
 
-/* Short option characters */
+/* Short Option Characters */
 #define OPTIONS_STR ":abcd:e:"
 
-/* Command-line options data */
+/*
+** Type: options_t
+** ---------------
+** Options Type for Command-Line Options Data
+*/
 typedef struct options
 {
     char      * arguments[OPT_ARGS_NUM];    /* Arguments for options */
@@ -40,17 +44,17 @@ options_t;
 extern options_t program_options;
 
 /* Get all command-line options */
-status_t options_get(int argc, char **argv, char *error_option);
+result_t options_get(int argc, char **argv, char *error_option);
 
 /* Get option status */
-bool is_set_option_a();
-bool is_set_option_b();
-bool is_set_option_c();
-bool is_set_option_d();
-bool is_set_option_e();
+bool is_set_option_a (void);
+bool is_set_option_b (void);
+bool is_set_option_c (void);
+bool is_set_option_d (void);
+bool is_set_option_e (void);
 
 /* Get option argument */
-char * get_option_arg_d();
-char * get_option_arg_e();
+char * get_option_arg_d (void);
+char * get_option_arg_e (void);
 
 #endif

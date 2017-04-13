@@ -2,7 +2,7 @@
 #include <unistd.h>
 #include <stdint.h>
 
-#include "status.h"
+#include "result.h"
 #include "options.h"
 
 /* Main Program Options */
@@ -11,7 +11,7 @@ options_t program_options;
 /*
 ** Function: options_init
 ** ----------------------
-** Initializes 'program_options'
+** Initializes 'program_options' Data
 */
 void options_init(void)
 {
@@ -28,12 +28,12 @@ void options_init(void)
 /*
 ** Function: options_get
 ** ---------------------
-** Reads all command-line options into 'program_opts'
+** Reads All Command-Line Options into 'program_opts' Data
 */
-status_t options_get(int argc, char **argv, char *error_option)
+result_t options_get(int argc, char **argv, char *error_option)
 {
     /* Set default return status */
-    status_t status = STATUS_OK;
+    result_t result = RESULT_OK;
     
     /* Check output parameter */
     if (error_option != NULL)
@@ -50,13 +50,13 @@ status_t options_get(int argc, char **argv, char *error_option)
         while (is_next_opt)
         {
             /* Read next command-line argument */
-            int result = getopt(argc, argv, OPTIONS_STR);
+            int next_option = getopt(argc, argv, OPTIONS_STR);
             
             /* Next option has been read */
-            if (result != -1)
+            if (next_option != -1)
             {
                 /* Process option */
-                switch (result)
+                switch (next_option)
                 {
                     /* Option '-a' was passed */
                     case 'a':   program_options.status |= OPT_A;
@@ -82,17 +82,17 @@ status_t options_get(int argc, char **argv, char *error_option)
                     
                     /* Unrecognized option was passed */
                     case '?':   *error_option = optopt;
-                                status = STATUS_ERROR_UNRECOGNIZED_OPTION;
+                                result = RESULT_ERROR_UNRECOGNIZED_OPTION;
                                 break;
                     
                     /* Option with missing argument was passed */
                     case ':':   *error_option = optopt;
-                                status = STATUS_ERROR_MISSING_OPTION_ARG;
+                                result = RESULT_ERROR_MISSING_OPTION_ARG;
                                 break;
                     
                     /* Unsupported option was passed */
                     default:    *error_option = result;
-                                status = STATUS_ERROR_UNSUPPORTED_OPTION;
+                                result = RESULT_ERROR_UNSUPPORTED_OPTION;
                 }
             }
             else
@@ -105,10 +105,10 @@ status_t options_get(int argc, char **argv, char *error_option)
     else
     {
         /* Set argument error */
-        status = STATUS_ERROR_INCORRECT_ARGUMENT;
+        result = RESULT_ERROR_INCORRECT_ARGUMENT;
     }
     
-    return status;
+    return result;
 }
 
 /*

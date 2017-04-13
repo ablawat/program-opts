@@ -2,30 +2,30 @@
 #include <stdint.h>
 #include <stdio.h>
 
-#include "status.h"
+#include "result.h"
 #include "options.h"
 
 int main(int argc, char **argv)
 {
     char error_option;
     
-    status_t status = options_get(argc, argv, &error_option);
+    result_t result = options_get(argc, argv, &error_option);
     
-    switch (status)
+    switch (result)
     {
-        case STATUS_ERROR_UNRECOGNIZED_OPTION:
+        case RESULT_ERROR_UNRECOGNIZED_OPTION:
         {
             fprintf(stderr, "Error: Unrecognized option '-%c'\n", error_option);
             return 1;
         }
         
-        case STATUS_ERROR_MISSING_OPTION_ARG:
+        case RESULT_ERROR_MISSING_OPTION_ARG:
         {
             fprintf(stderr, "Error: Option '-%c' requires an argument\n", error_option);
             return 1;
         }
         
-        case STATUS_ERROR_UNSUPPORTED_OPTION:
+        case RESULT_ERROR_UNSUPPORTED_OPTION:
         {
             fprintf(stderr, "Error: Unsupported option '-%c'\n", error_option);
             return 1;
