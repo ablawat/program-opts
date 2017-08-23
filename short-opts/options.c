@@ -59,40 +59,86 @@ result_t options_get(int argc, char **argv, char *error_option)
                 switch (next_option)
                 {
                     /* Option '-a' was passed */
-                    case 'a':   program_options.status |= OPT_A;
-                                break;
+                    case 'a':
+                    {
+                        program_options.status |= OPT_A;
+                        break;
+                    }
                     
                     /* Option '-b' was passed */
-                    case 'b':   program_options.status |= OPT_B;
-                                break;
+                    case 'b':
+                    {
+                        program_options.status |= OPT_B;
+                        break;
+                    }
                     
                     /* Option '-c' was passed */
-                    case 'c':   program_options.status |= OPT_C;
-                                break;
+                    case 'c':
+                    {
+                        program_options.status |= OPT_C;
+                        break;
+                    }
                     
                     /* Option '-d' was passed */
-                    case 'd':   program_options.status |= OPT_D;
-                                program_options.arguments[OPT_D_ARG] = optarg;
-                                break;
+                    case 'd':
+                    {
+                        program_options.status |= OPT_D;
+                        program_options.arguments[OPT_D_ARG] = optarg;
+                        
+                        break;
+                    }
                     
                     /* Option '-e' was passed */
-                    case 'e':   program_options.status |= OPT_E;
-                                program_options.arguments[OPT_E_ARG] = optarg;
-                                break;
+                    case 'e':
+                    {
+                        program_options.status |= OPT_E;
+                        program_options.arguments[OPT_E_ARG] = optarg;
+                        
+                        break;
+                    }
                     
                     /* Unrecognized option was passed */
-                    case '?':   *error_option = optopt;
-                                result = RESULT_ERROR_UNRECOGNIZED_OPTION;
-                                break;
+                    case '?':
+                    {
+                        /* get option character */
+                        *error_option = optopt;
+                        
+                        /* set return status to error */
+                        result = RESULT_ERROR_UNRECOGNIZED_OPTION;
+                        
+                        /* end options parsing */ 
+                        is_next_opt = false;
+                        
+                        break;
+                    }
                     
                     /* Option with missing argument was passed */
-                    case ':':   *error_option = optopt;
-                                result = RESULT_ERROR_MISSING_OPTION_ARG;
-                                break;
+                    case ':':
+                    {
+                        /* get option character */
+                        *error_option = optopt;
+                        
+                        /* set return status to error */
+                        result = RESULT_ERROR_MISSING_OPTION_ARG;
+                        
+                        /* end options parsing */ 
+                        is_next_opt = false;
+                        
+                        break;
+                    }
                     
                     /* Unsupported option was passed */
-                    default:    *error_option = result;
-                                result = RESULT_ERROR_UNSUPPORTED_OPTION;
+                    default:
+                    {
+                        /* get option character */
+                        *error_option = result;
+                        
+                        /* set return status to error */
+                        result = RESULT_ERROR_UNSUPPORTED_OPTION;
+                        
+                        /* end options parsing */ 
+                        is_next_opt = false;
+                    }
                 }
             }
             else
