@@ -72,88 +72,114 @@ result_t options_get(int argc, char **argv, char **error_option)
                 switch (next_option)
                 {
                     /* Option '-a' or '--opta' was passed */
-                    case 'a':   program_options.status |= OPT_A;
-                                break;
+                    case 'a':
+                    {
+                        program_options.status |= OPT_A;
+                        break;
+                    }
                     
                     /* Option '-b' or '--optb' was passed */
-                    case 'b':   program_options.status |= OPT_B;
-                                break;
+                    case 'b':
+                    {
+                        program_options.status |= OPT_B;
+                        break;
+                    }
                     
                     /* Option '-c' or '--optc' was passed */
-                    case 'c':   program_options.status |= OPT_C;
-                                break;
+                    case 'c':
+                    {
+                        program_options.status |= OPT_C;
+                        break;
+                    }
                     
                     /* Option '-d' or '--optd' was passed */
-                    case 'd':   program_options.status |= OPT_D;
-                                program_options.arguments[OPT_D_ARG] = optarg;
-                                break;
+                    case 'd':
+                    {
+                        program_options.status |= OPT_D;
+                        program_options.arguments[OPT_D_ARG] = optarg;
+                        
+                        break;
+                    }
                     
                     /* Option '-e' or '--opte' was passed */
-                    case 'e':   program_options.status |= OPT_E;
-                                program_options.arguments[OPT_E_ARG] = optarg;
-                                break;
+                    case 'e':
+                    {
+                        program_options.status |= OPT_E;
+                        program_options.arguments[OPT_E_ARG] = optarg;
+                        
+                        break;
+                    }
                     
                     /* Unrecognized option was passed */
-                    case '?':   if (optopt != 0)
-                                {
-                                    /* short opt */
-                                    *error_option = malloc(3);
-                                    
-                                    (*error_option)[0] = '-';
-                                    (*error_option)[1] = optopt;
-                                    (*error_option)[2] = '\0';
-                                }
-                                else
-                                {
-                                    /* long opt */
-                                    *error_option = malloc(strlen(argv[optind - 1]));
-                                    
-                                    strcpy(*error_option, argv[optind - 1]);
-                                }
+                    case '?':
+                    {
+                        if (optopt != 0)
+                        {
+                            /* short opt */
+                            *error_option = malloc(3);
+                            
+                            (*error_option)[0] = '-';
+                            (*error_option)[1] = optopt;
+                            (*error_option)[2] = '\0';
+                        }
+                        else
+                        {
+                            /* long opt */
+                            *error_option = malloc(strlen(argv[optind - 1]));
+                            
+                            strcpy(*error_option, argv[optind - 1]);
+                        }
                     
-                                result = RESULT_ERROR_UNRECOGNIZED_OPTION;
-                                break;
+                        result = RESULT_ERROR_UNRECOGNIZED_OPTION;
+                        break;
+                    }
                                 
                     /* Option with missing argument was passed */
-                    case ':':   if (*(argv[optind - 1] + 1) != '-')
-                                {
-                                    /* short opt */
-                                    *error_option = malloc(3);
-                                    
-                                    (*error_option)[0] = '-';
-                                    (*error_option)[1] = optopt;
-                                    (*error_option)[2] = '\0';
-                                }
-                                else
-                                {
-                                    /* long opt */
-                                    *error_option = malloc(strlen(argv[optind - 1]));
-                                    
-                                    strcpy(*error_option, argv[optind - 1]);
-                                }
-                                
-                                result = RESULT_ERROR_MISSING_OPTION_ARG;
-                                break;
+                    case ':':
+                    {
+                        if (*(argv[optind - 1] + 1) != '-')
+                        {
+                            /* short opt */
+                            *error_option = malloc(3);
+                            
+                            (*error_option)[0] = '-';
+                            (*error_option)[1] = optopt;
+                            (*error_option)[2] = '\0';
+                        }
+                        else
+                        {
+                            /* long opt */
+                            *error_option = malloc(strlen(argv[optind - 1]));
+                            
+                            strcpy(*error_option, argv[optind - 1]);
+                        }
+                        
+                        result = RESULT_ERROR_MISSING_OPTION_ARG;
+                        break;
+                    }
                     
                     /* Unsupported option was passed */
-                    default:    if (optopt != 0)
-                                {
-                                    /* short opt */
-                                    *error_option = malloc(3);
-                                    
-                                    (*error_option)[0] = '-';
-                                    (*error_option)[1] = (char)(next_option);
-                                    (*error_option)[2] = '\0';
-                                }
-                                else
-                                {
-                                    /* long opt */
-                                    *error_option = malloc(strlen(argv[optind - 1]));
-                                    
-                                    strcpy(*error_option, argv[optind - 1]);
-                                }
-                                
-                                result = RESULT_ERROR_UNSUPPORTED_OPTION;
+                    default:
+                    {
+                        if (optopt != 0)
+                        {
+                            /* short opt */
+                            *error_option = malloc(3);
+                            
+                            (*error_option)[0] = '-';
+                            (*error_option)[1] = (char)(next_option);
+                            (*error_option)[2] = '\0';
+                        }
+                        else
+                        {
+                            /* long opt */
+                            *error_option = malloc(strlen(argv[optind - 1]));
+                            
+                            strcpy(*error_option, argv[optind - 1]);
+                        }
+                        
+                        result = RESULT_ERROR_UNSUPPORTED_OPTION;
+                    }
                 }
             }
             else
