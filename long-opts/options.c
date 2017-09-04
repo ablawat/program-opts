@@ -129,8 +129,13 @@ result_t options_get(int argc, char **argv, char **error_option)
                             
                             strcpy(*error_option, argv[optind - 1]);
                         }
-                    
+                        
+                        /* set return status to error */
                         result = RESULT_ERROR_UNRECOGNIZED_OPTION;
+                        
+                        /* end options parsing */ 
+                        is_next_opt = false;
+                        
                         break;
                     }
                                 
@@ -154,7 +159,12 @@ result_t options_get(int argc, char **argv, char **error_option)
                             strcpy(*error_option, argv[optind - 1]);
                         }
                         
+                        /* set return status to error */
                         result = RESULT_ERROR_MISSING_OPTION_ARG;
+                        
+                        /* end options parsing */ 
+                        is_next_opt = false;
+                        
                         break;
                     }
                     
@@ -178,7 +188,11 @@ result_t options_get(int argc, char **argv, char **error_option)
                             strcpy(*error_option, argv[optind - 1]);
                         }
                         
+                        /* set return status to error */
                         result = RESULT_ERROR_UNSUPPORTED_OPTION;
+                        
+                        /* end options parsing */ 
+                        is_next_opt = false;
                     }
                 }
             }
