@@ -26,35 +26,41 @@ enum
     OPT_ARGS_NUM  /* Number of options with required argument */
 };
 
-/* Short Option Characters */
-#define OPTIONS_STR ":abcd:e:"
+/*
+** Type: options_conf_t
+** --------------------
+** Options Type for Command-Line Options Definition
+*/
+typedef struct options_conf
+{
+    char           * options_short;       /* Config for short options */
+    struct option    options_long[6];     /* Config for long options  */
+}
+options_conf_t;
 
 /*
-** Type: options_t
-** ---------------
+** Type: options_data_t
+** --------------------
 ** Options Type for Command-Line Options Data
 */
-typedef struct options
+typedef struct options_data
 {
     char      * arguments[OPT_ARGS_NUM];    /* Arguments for options */
     uint64_t    status;                     /* Bit flags for options */
 }
-options_t;
+options_data_t;
 
-/* Main Program Options */
-extern options_t program_options;
+/* Get Program Command-Line Options */
+result_t options_get (int argc, char **argv, char **error_option);
 
-/* Get all command-line options */
-result_t options_get(int argc, char **argv, char **error_option);
-
-/* Get option status */
+/* Get Option Status */
 bool is_set_option_a (void);
 bool is_set_option_b (void);
 bool is_set_option_c (void);
 bool is_set_option_d (void);
 bool is_set_option_e (void);
 
-/* Get option argument */
+/* Get Option Argument */
 char * get_option_arg_d (void);
 char * get_option_arg_e (void);
 
