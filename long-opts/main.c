@@ -33,33 +33,33 @@ int main(int argc, char **argv)
     }
     
     /* Checks if bit flag for option '-a' and '--opta' is set */
-    if (is_set_option_a())
+    if (options_is_set(OPTION_A))
     {
         puts("Option '-a' or '--opta' is set");
     }
     
     /* Checks if bit flag for option '-b' and '--optb' is set */
-    if (is_set_option_b())
+    if (options_is_set(OPTION_B))
     {
         puts("Option '-b' or '--optb' is set");
     }
     
     /* Checks if bit flag for option '-c' and '--optc' is set */
-    if (is_set_option_c())
+    if (options_is_set(OPTION_C))
     {
         puts("Option '-c' or '--optc' is set");
     }
     
     /* Checks if bit flag for option '-d' and '--optd' is set */
-    if (is_set_option_d())
+    if (options_is_set(OPTION_D))
     {
-        printf("Option '-d' or '--optd' is set with argument '%s'\n", get_option_arg_d());
+        printf("Option '-d' or '--optd' is set with argument '%s'\n", options_get_arg(OPTION_D));
     }
     
     /* Checks if bit flag for option '-e' and '--opte' is set */
-    if (is_set_option_e())
+    if (options_is_set(OPTION_E))
     {
-        printf("Option '-e' or '--opte' is set with argument '%s'\n", get_option_arg_e());
+        printf("Option '-e' or '--opte' is set with argument '%s'\n", options_get_arg(OPTION_E));
     }
     
     return 0;

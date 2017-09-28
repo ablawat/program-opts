@@ -7,23 +7,31 @@
 
 #include "result.h"
 
-/* Available Command-Line Options */
-enum
+/*
+** Type: option_t
+** --------------
+** Options Type for Available Command-Line Options
+*/
+typedef enum options_cmd_opt
 {
-    OPT_A = 0x01,  /* Option '-a' and '--opta', bit 0 */
-    OPT_B = 0x02,  /* Option '-b' and '--optb', bit 1 */
-    OPT_C = 0x04,  /* Option '-c' and '--optc', bit 2 */
-    OPT_D = 0x08,  /* Option '-d' and '--optd', bit 3 */
-    OPT_E = 0x10   /* Option '-e' and '--opte', bit 4 */
-};
+    /* Options with Required Argument */
+    OPTION_D = 0x01,    /* Option '-d' and '--optd', bit 0 */
+    OPTION_E = 0x02,    /* Option '-e' and '--opte', bit 1 */
+    
+    /* Options without Argument */
+    OPTION_A = 0x04,    /* Option '-a' and '--opta', bit 2 */
+    OPTION_B = 0x08,    /* Option '-b' and '--optb', bit 3 */
+    OPTION_C = 0x10     /* Option '-c' and '--optc', bit 4 */
+}
+option_t;
 
 /* Command-Line Options with Required Argument */
 enum
 {
-    OPT_D_ARG,    /* Option '-d' and '--optd' requires argument */
-    OPT_E_ARG,    /* Option '-e' and '--opte' requires argument */
+    OPTION_D_ARG,
+    OPTION_E_ARG,
     
-    OPT_ARGS_NUM  /* Number of options with required argument */
+    OPTION_ARGS_NUM
 };
 
 /*
@@ -45,23 +53,18 @@ options_conf_t;
 */
 typedef struct options_data
 {
-    char      * arguments[OPT_ARGS_NUM];    /* Arguments for options */
-    uint64_t    status;                     /* Bit flags for options */
+    char      * arguments[OPTION_ARGS_NUM];     /* Arguments for options */
+    uint64_t    status;                         /* Bit flags for options */
 }
 options_data_t;
 
 /* Get Program Command-Line Options */
-result_t options_get (int argc, char **argv, char **error_option);
+result_t options_get     (int argc, char **argv, char **error_option);
 
 /* Get Option Status */
-bool is_set_option_a (void);
-bool is_set_option_b (void);
-bool is_set_option_c (void);
-bool is_set_option_d (void);
-bool is_set_option_e (void);
+bool     options_is_set  (option_t option);
 
 /* Get Option Argument */
-char * get_option_arg_d (void);
-char * get_option_arg_e (void);
+char *   options_get_arg (option_t option);
 
 #endif

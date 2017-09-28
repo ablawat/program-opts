@@ -1,3 +1,4 @@
+#define _GNU_SOURCE
 #include <stdbool.h>
 #include <unistd.h>
 #include <string.h>
@@ -76,29 +77,29 @@ result_t options_get(int argc, char **argv, char **error_option)
                     /* Option '-a' or '--opta' was passed */
                     case 'a':
                     {
-                        program_options_data.status |= OPT_A;
+                        program_options_data.status |= OPTION_A;
                         break;
                     }
                     
                     /* Option '-b' or '--optb' was passed */
                     case 'b':
                     {
-                        program_options_data.status |= OPT_B;
+                        program_options_data.status |= OPTION_B;
                         break;
                     }
                     
                     /* Option '-c' or '--optc' was passed */
                     case 'c':
                     {
-                        program_options_data.status |= OPT_C;
+                        program_options_data.status |= OPTION_C;
                         break;
                     }
                     
                     /* Option '-d' or '--optd' was passed */
                     case 'd':
                     {
-                        program_options_data.status |= OPT_D;
-                        program_options_data.arguments[OPT_D_ARG] = optarg;
+                        program_options_data.status |= OPTION_D;
+                        program_options_data.arguments[OPTION_D_ARG] = optarg;
                         
                         break;
                     }
@@ -106,8 +107,8 @@ result_t options_get(int argc, char **argv, char **error_option)
                     /* Option '-e' or '--opte' was passed */
                     case 'e':
                     {
-                        program_options_data.status |= OPT_E;
-                        program_options_data.arguments[OPT_E_ARG] = optarg;
+                        program_options_data.status |= OPTION_E;
+                        program_options_data.arguments[OPTION_E_ARG] = optarg;
                         
                         break;
                     }
@@ -215,106 +216,37 @@ result_t options_get(int argc, char **argv, char **error_option)
 }
 
 /*
-** Function: is_set_option_a
-** -------------------------
-** Checks if option 'a' is set
+** Function: options_is_set
+** ------------------------
+** Checks if option is set
 */
-inline bool is_set_option_a()
+bool options_is_set(option_t option)
 {
-    bool status = false;
+    bool option_status = false;
     
-    if (program_options_data.status & OPT_A)
+    if (program_options_data.status & option)
     {
-        status = true;
+        option_status = true;
     }
     
-    return status;
+    return option_status;
 }
 
 /*
-** Function: is_set_option_b
+** Function: options_get_arg
 ** -------------------------
-** Checks if option 'b' is set
+** Returns pointer to option argument
 */
-inline bool is_set_option_b()
+char * options_get_arg(option_t option)
 {
-    bool status = false;
+    char *option_argument = NULL;
+
+    uint8_t index = ffsll(option) - 1;
     
-    if (program_options_data.status & OPT_B)
+    if (index < OPTION_ARGS_NUM)
     {
-        status = true;
+        option_argument = program_options_data.arguments[index];
     }
     
-    return status;
-}
-
-/*
-** Function: is_set_option_c
-** -------------------------
-** Checks if option 'c' is set
-*/
-inline bool is_set_option_c()
-{
-    bool status = false;
-    
-    if (program_options_data.status & OPT_C)
-    {
-        status = true;
-    }
-    
-    return status;
-}
-
-/*
-** Function: is_set_option_d
-** -------------------------
-** Checks if option 'd' is set
-*/
-inline bool is_set_option_d()
-{
-    bool status = false;
-    
-    if (program_options_data.status & OPT_D)
-    {
-        status = true;
-    }
-    
-    return status;
-}
-
-/*
-** Function: is_set_option_e
-** -------------------------
-** Checks if option 'e' is set
-*/
-inline bool is_set_option_e()
-{
-    bool status = false;
-    
-    if (program_options_data.status & OPT_E)
-    {
-        status = true;
-    }
-    
-    return status;
-}
-
-/*
-** Function: get_option_arg_d
-** --------------------------
-** Returns pointer to option 'd' argument
-*/
-inline char * get_option_arg_d()
-{
-    return program_options_data.arguments[OPT_D_ARG];
-}
-
-/*
-** Function: get_option_arg_e
-** --------------------------
-** Returns pointer to option 'e' argument
-*/
-inline char * get_option_arg_e()
-{
-    return program_options_data.arguments[OPT_E_ARG];
+    return option_argument;
 }
