@@ -7,27 +7,25 @@
 
 int main(int argc, char **argv)
 {
-    char *error_option = NULL;
-    
-    result_t result = options_get(argc, argv, &error_option);
+    result_t result = options_get(argc, argv);
     
     switch (result)
     {
         case RESULT_ERROR_UNRECOGNIZED_OPTION:
         {
-            fprintf(stderr, "Error: Unrecognized option '%s'\n", error_option);
+            fprintf(stderr, "Error: Unrecognized option '%s'\n", options_erropt);
             return 1;
         }
         
         case RESULT_ERROR_MISSING_OPTION_ARG:
         {
-            fprintf(stderr, "Error: Option '%s' requires an argument\n", error_option);
+            fprintf(stderr, "Error: Option '%s' requires an argument\n", options_erropt);
             return 1;
         }
         
         case RESULT_ERROR_UNSUPPORTED_OPTION:
         {
-            fprintf(stderr, "Error: Unsupported option '%s'\n", error_option);
+            fprintf(stderr, "Error: Unsupported option '%s'\n", options_erropt);
             return 1;
         }
     }

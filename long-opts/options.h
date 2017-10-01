@@ -41,8 +41,8 @@ enum
 */
 typedef struct options_conf
 {
-    char           * options_short;       /* Config for short options */
-    struct option    options_long[6];     /* Config for long options  */
+    char           * options_short;    /* Config for short options */
+    struct option  * options_long;     /* Config for long options  */
 }
 options_conf_t;
 
@@ -53,13 +53,21 @@ options_conf_t;
 */
 typedef struct options_data
 {
-    char      * arguments[OPTION_ARGS_NUM];     /* Arguments for options */
-    uint64_t    status;                         /* Bit flags for options */
+    char      * arguments[OPTION_ARGS_NUM];     /* Options arguments   */
+    uint64_t    status;                         /* Options bit flags   */
+    char        short_option[3];                /* Short option string */
 }
 options_data_t;
 
+/*
+** Variable: options_erropt
+** ------------------------
+** Provides Error Option String
+*/
+extern const char * options_erropt;
+
 /* Get Program Command-Line Options */
-result_t options_get     (int argc, char **argv, char **error_option);
+result_t options_get     (int argc, char **argv);
 
 /* Get Option Status */
 bool     options_is_set  (option_t option);
