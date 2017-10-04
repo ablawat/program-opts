@@ -1,5 +1,5 @@
-#ifndef OPTS_H
-#define OPTS_H
+#ifndef OPTIONS_H
+#define OPTIONS_H
 
 #include <stdbool.h>
 #include <stdint.h>
@@ -10,7 +10,7 @@
 /*
 ** Type: option_t
 ** --------------
-** Options Type for Available Command-Line Options
+** Available Command-Line Options
 */
 typedef enum options_cmd_opt
 {
@@ -28,16 +28,18 @@ option_t;
 /* Command-Line Options with Required Argument */
 enum
 {
-    OPTION_D_ARG,
-    OPTION_E_ARG,
+    OPTION_D_ARG,       /* Option's '-d' and '--optd' argument */
+    OPTION_E_ARG,       /* Option's '-e' and '--opte' argument */
     
-    OPTION_ARGS_NUM
+    OPTION_ARGS_NUM     /* Number of options with argument */
 };
+
+#define OPTION_STR_SIZE 3U
 
 /*
 ** Type: options_conf_t
 ** --------------------
-** Options Type for Command-Line Options Definition
+** Command-Line Options Definition
 */
 typedef struct options_conf
 {
@@ -49,13 +51,13 @@ options_conf_t;
 /*
 ** Type: options_data_t
 ** --------------------
-** Options Type for Command-Line Options Data
+** Command-Line Options Data
 */
 typedef struct options_data
 {
-    char      * arguments[OPTION_ARGS_NUM];     /* Options arguments   */
-    uint64_t    status;                         /* Options bit flags   */
-    char        short_option[3];                /* Short option string */
+    char      * arguments    [OPTION_ARGS_NUM];     /* Options arguments list */
+    uint64_t    status;                             /* Options status flags   */
+    char        short_option [OPTION_STR_SIZE];     /* Short error option     */
 }
 options_data_t;
 

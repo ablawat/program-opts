@@ -5,7 +5,7 @@
 
 #include "options.h"
 
-/* Main Program Options Definition */
+/* Program Options Definition */
 static const options_conf_t program_options_config =
 {
     /*
@@ -35,26 +35,26 @@ static const options_conf_t program_options_config =
     }
 };
 
-/* Main Program Options Data */
+/* Program Options Data */
 static options_data_t program_options_data =
 {
     /* Clear options arguments */
     { NULL, NULL },
 
     /* Clear options bit flags */
-    0U,
+    UINT64_C(0),
     
     /* Init short option string */
     { '-', '\0', '\0' }
 };
 
-/* Program Options Error Option */
+/* Program Error Option */
 const char * options_erropt = NULL;
 
 /*
 ** Function: options_get
 ** ---------------------
-** Reads All Command-Line Options into 'program_options_data'
+** Reads Command-Line Options into Program Options Data
 */
 result_t options_get(int argc, char **argv)
 {
@@ -69,7 +69,7 @@ result_t options_get(int argc, char **argv)
         const char          *short_options = program_options_config.options_short;
         const struct option *long_options  = program_options_config.options_long;
 
-        /* Read next command-line argument */
+        /* Read next command-line option */
         int next_option = getopt_long(argc, argv, short_options, long_options, NULL);
         
         /* Next option has been read */
@@ -122,20 +122,20 @@ result_t options_get(int argc, char **argv)
                 {
                     if (optopt != 0)
                     {
-                        /* short opt */
+                        /* Set short error option */
                         program_options_data.short_option[1] = optopt;
                         options_erropt = program_options_data.short_option;
                     }
                     else
                     {
-                        /* long opt */
+                        /* Set long error option */
                         options_erropt = argv[optind - 1];
                     }
                     
-                    /* set return status to error */
+                    /* Set return status to error */
                     result = RESULT_ERROR_UNRECOGNIZED_OPTION;
                     
-                    /* end options parsing */ 
+                    /* End options parsing */ 
                     is_next_opt = false;
                     
                     break;
@@ -146,20 +146,20 @@ result_t options_get(int argc, char **argv)
                 {
                     if (*(argv[optind - 1] + 1) != '-')
                     {
-                        /* short opt */
+                        /* Set short error option */
                         program_options_data.short_option[1] = optopt;
                         options_erropt = program_options_data.short_option;
                     }
                     else
                     {
-                        /* long opt */
+                        /* Set long error option */
                         options_erropt = argv[optind - 1];
                     }
                     
-                    /* set return status to error */
+                    /* Set return status to error */
                     result = RESULT_ERROR_MISSING_OPTION_ARG;
                     
-                    /* end options parsing */ 
+                    /* End options parsing */ 
                     is_next_opt = false;
                     
                     break;
@@ -170,20 +170,20 @@ result_t options_get(int argc, char **argv)
                 {
                     if (optopt != 0)
                     {
-                        /* short opt */
+                        /* Set short error option */
                         program_options_data.short_option[1] = (char)(next_option);
                         options_erropt = program_options_data.short_option;
                     }
                     else
                     {
-                        /* long opt */
+                        /* Set long error option */
                         options_erropt = argv[optind - 1];
                     }
                     
-                    /* set return status to error */
+                    /* Set return status to error */
                     result = RESULT_ERROR_UNSUPPORTED_OPTION;
                     
-                    /* end options parsing */ 
+                    /* End options parsing */ 
                     is_next_opt = false;
                 }
             }
@@ -201,7 +201,7 @@ result_t options_get(int argc, char **argv)
 /*
 ** Function: options_is_set
 ** ------------------------
-** Checks if option is set
+** Checks If Option Was Recognized on Command-Line
 */
 bool options_is_set(option_t option)
 {
@@ -218,7 +218,7 @@ bool options_is_set(option_t option)
 /*
 ** Function: options_get_arg
 ** -------------------------
-** Returns pointer to option argument
+** Returns Pointer to Option Argument
 */
 char * options_get_arg(option_t option)
 {
