@@ -15,7 +15,7 @@ static const options_conf_t program_options_config =
     ** Each single character defines one short option (ex. 'a' enables '-a' option)
     ** Each single character followed by a colon is a short option that requires an argument (ex. 'd:')
     */
-    ":abcd:e:",
+    ":ab:ef:",
 
     /*
     ** Array containing long options definitions
@@ -26,11 +26,10 @@ static const options_conf_t program_options_config =
     */
     (struct option [])
     {
-        { "opta", no_argument,       0, 'a' },      /* Long option name 'opta', short name 'a' */
-        { "optb", no_argument,       0, 'b' },      /* Long option name 'optb', short name 'b' */
-        { "optc", no_argument,       0, 'c' },      /* Long option name 'optc', short name 'c' */
-        { "optd", required_argument, 0, 'd' },      /* Long option name 'optd', short name 'd' */
-        { "opte", required_argument, 0, 'e' },      /* Long option name 'opte', short name 'e' */
+        { "opte", no_argument,       NULL, 'e'        },    /* Long option 'opte', short 'e' */
+        { "optf", required_argument, NULL, 'f'        },    /* Long option 'optf', short 'f' */
+        { "optc", no_argument,       NULL, LONG_OPT_C },    /* Long option 'optc' */
+        { "optd", required_argument, NULL, LONG_OPT_D },    /* Long option 'optd' */
         { 0, 0, 0, 0 }
     }
 };
@@ -78,33 +77,18 @@ result_t options_get(int argc, char **argv)
             /* Process option */
             switch (next_option)
             {
-                /* Option '-a' or '--opta' was passed */
+                /* Option '-a' was passed */
                 case 'a':
                 {
                     program_options_data.status |= OPTION_A;
                     break;
                 }
                 
-                /* Option '-b' or '--optb' was passed */
+                /* Option '-b' was passed */
                 case 'b':
                 {
                     program_options_data.status |= OPTION_B;
-                    break;
-                }
-                
-                /* Option '-c' or '--optc' was passed */
-                case 'c':
-                {
-                    program_options_data.status |= OPTION_C;
-                    break;
-                }
-                
-                /* Option '-d' or '--optd' was passed */
-                case 'd':
-                {
-                    program_options_data.status |= OPTION_D;
-                    program_options_data.arguments[OPTION_D_ARG] = optarg;
-                    
+                    program_options_data.arguments[OPTION_B_ARG] = optarg;
                     break;
                 }
                 
@@ -112,11 +96,33 @@ result_t options_get(int argc, char **argv)
                 case 'e':
                 {
                     program_options_data.status |= OPTION_E;
-                    program_options_data.arguments[OPTION_E_ARG] = optarg;
                     
                     break;
                 }
                 
+                /* Option '-f' was passed */
+                case 'f':
+                {
+                    program_options_data.status |= OPTION_F;
+                    program_options_data.arguments[OPTION_F_ARG] = optarg;
+                    break;
+                }
+
+                /* Option '--optc' was passed */
+                case LONG_OPT_C:
+                {
+                    program_options_data.status |= OPTION_C;
+                    break;
+                }
+
+                /* Option '--optd' was passed */
+                case LONG_OPT_D:
+                {
+                    program_options_data.status |= OPTION_D;
+                    program_options_data.arguments[OPTION_D_ARG] = optarg;
+                    break;
+                }
+
                 /* Unrecognized option was passed */
                 case '?':
                 {

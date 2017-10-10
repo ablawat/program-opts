@@ -15,23 +15,35 @@
 typedef enum options_cmd_opt
 {
     /* Options with Required Argument */
-    OPTION_D = 0x01,    /* Option '-d' and '--optd', bit 0 */
-    OPTION_E = 0x02,    /* Option '-e' and '--opte', bit 1 */
+    OPTION_B = 0x01,    /* Option '-b'             , bit 0 */
+    OPTION_D = 0x02,    /* Option '--optd'         , bit 1 */
+    OPTION_F = 0x04,    /* Option '-f' and '--optf', bit 2 */
     
     /* Options without Argument */
-    OPTION_A = 0x04,    /* Option '-a' and '--opta', bit 2 */
-    OPTION_B = 0x08,    /* Option '-b' and '--optb', bit 3 */
-    OPTION_C = 0x10     /* Option '-c' and '--optc', bit 4 */
+    OPTION_A = 0x08,    /* Option '-a'             , bit 3 */
+    OPTION_C = 0x10,    /* Option '--optc'         , bit 4 */
+    OPTION_E = 0x20     /* Option '-e' and '--opte', bit 5 */
 }
 option_t;
 
-/* Command-Line Options with Required Argument */
+/* Indexes for Options Arguments */
 enum
 {
-    OPTION_D_ARG,       /* Option's '-d' and '--optd' argument */
-    OPTION_E_ARG,       /* Option's '-e' and '--opte' argument */
+    OPTION_B_ARG,       /* Option's '-b' argument              */
+    OPTION_D_ARG,       /* Option's '--optd' argument          */
+    OPTION_F_ARG,       /* Option's '-f' and '--optf' argument */
     
     OPTION_ARGS_NUM     /* Number of options with argument */
+};
+
+/* Start Identifier */
+#define LONG_OPT_START 128
+
+/* Identifiers for Long Only Options */
+enum
+{
+    LONG_OPT_C = (LONG_OPT_START + 0),  /* Long option '--optc' */
+    LONG_OPT_D = (LONG_OPT_START + 1)   /* Long option '--optd' */
 };
 
 #define OPTION_STR_SIZE 3U
