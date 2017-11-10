@@ -11,10 +11,10 @@ typedef enum result
     /* General Results */
     RESULT_OK,                          /* Operation executed without errors   */
     RESULT_NOT_OK,                      /* Errors encountered during execution */
-    
+
     /* Function Usage Errors */
     RESULT_ERROR_INCORRECT_ARGUMENT,    /* Incorrect function argument value */
-    
+
     /* Options Parsing Errors */
     RESULT_ERROR_MISSING_OPTION_ARG,    /* Found option that has not required argument */
     RESULT_ERROR_UNSUPPORTED_OPTION,    /* Found option that is not suported           */

@@ -42,13 +42,16 @@ static options_data_t program_options_data =
 
     /* Clear options bit flags */
     UINT64_C(0),
-    
+
     /* Init short option string */
     { '-', '\0', '\0' }
 };
 
 /* Program Error Option */
 const char * options_erropt = NULL;
+
+/* TBD */
+int options_argind = 0U;
 
 /*
 ** Function: options_get
@@ -59,10 +62,10 @@ result_t options_get(int argc, char **argv)
 {
     /* Set default return status */
     result_t result = RESULT_OK;
-    
+
     /* Was next option read */
     bool is_next_opt = true;
-    
+
     while (is_next_opt)
     {
         const char          *short_options = program_options_config.options_short;
@@ -70,7 +73,7 @@ result_t options_get(int argc, char **argv)
 
         /* Read next command-line option */
         int next_option = getopt_long(argc, argv, short_options, long_options, NULL);
-        
+
         /* Next option has been read */
         if (next_option != -1)
         {
@@ -83,7 +86,7 @@ result_t options_get(int argc, char **argv)
                     program_options_data.status |= OPTION_A;
                     break;
                 }
-                
+
                 /* Option '-b' was passed */
                 case 'b':
                 {
@@ -91,15 +94,14 @@ result_t options_get(int argc, char **argv)
                     program_options_data.arguments[OPTION_B_ARG] = optarg;
                     break;
                 }
-                
+
                 /* Option '-e' or '--opte' was passed */
                 case 'e':
                 {
                     program_options_data.status |= OPTION_E;
-                    
                     break;
                 }
-                
+
                 /* Option '-f' was passed */
                 case 'f':
                 {
@@ -137,16 +139,16 @@ result_t options_get(int argc, char **argv)
                         /* Set long error option */
                         options_erropt = argv[optind - 1];
                     }
-                    
+
                     /* Set return status to error */
                     result = RESULT_ERROR_UNRECOGNIZED_OPTION;
-                    
-                    /* End options parsing */ 
+
+                    /* End options parsing */
                     is_next_opt = false;
-                    
+
                     break;
                 }
-                            
+
                 /* Option with missing argument was passed */
                 case ':':
                 {
@@ -161,16 +163,16 @@ result_t options_get(int argc, char **argv)
                         /* Set long error option */
                         options_erropt = argv[optind - 1];
                     }
-                    
+
                     /* Set return status to error */
                     result = RESULT_ERROR_MISSING_OPTION_ARG;
-                    
-                    /* End options parsing */ 
+
+                    /* End options parsing */
                     is_next_opt = false;
-                    
+
                     break;
                 }
-                
+
                 /* Unsupported option was passed */
                 default:
                 {
@@ -185,11 +187,11 @@ result_t options_get(int argc, char **argv)
                         /* Set long error option */
                         options_erropt = argv[optind - 1];
                     }
-                    
+
                     /* Set return status to error */
                     result = RESULT_ERROR_UNSUPPORTED_OPTION;
-                    
-                    /* End options parsing */ 
+
+                    /* End options parsing */
                     is_next_opt = false;
                 }
             }
@@ -200,7 +202,9 @@ result_t options_get(int argc, char **argv)
             is_next_opt = false;
         }
     }
-    
+
+    options_argind = optind;
+
     return result;
 }
 
@@ -212,12 +216,12 @@ result_t options_get(int argc, char **argv)
 bool options_is_set(option_t option)
 {
     bool option_status = false;
-    
+
     if (program_options_data.status & option)
     {
         option_status = true;
     }
-    
+
     return option_status;
 }
 
@@ -231,11 +235,11 @@ char * options_get_arg(option_t option)
     char *option_argument = NULL;
 
     uint8_t index = ffsll(option) - 1;
-    
+
     if (index < OPTION_ARGS_NUM)
     {
         option_argument = program_options_data.arguments[index];
     }
-    
+
     return option_argument;
 }
