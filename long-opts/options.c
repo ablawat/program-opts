@@ -1,4 +1,3 @@
-#define _GNU_SOURCE
 #include <stdbool.h>
 #include <unistd.h>
 #include <string.h>
@@ -83,14 +82,14 @@ result_t options_get(int argc, char **argv)
                 /* Option '-a' was passed */
                 case 'a':
                 {
-                    program_options_data.status |= OPTION_A;
+                    program_options_data.status |= UINT64_C(1) << OPTION_A;
                     break;
                 }
 
                 /* Option '-b' was passed */
                 case 'b':
                 {
-                    program_options_data.status |= OPTION_B;
+                    program_options_data.status |= UINT64_C(1) << OPTION_B;
                     program_options_data.arguments[OPTION_B_ARG] = optarg;
                     break;
                 }
@@ -98,14 +97,14 @@ result_t options_get(int argc, char **argv)
                 /* Option '-e' or '--opte' was passed */
                 case 'e':
                 {
-                    program_options_data.status |= OPTION_E;
+                    program_options_data.status |= UINT64_C(1) << OPTION_E;
                     break;
                 }
 
                 /* Option '-f' was passed */
                 case 'f':
                 {
-                    program_options_data.status |= OPTION_F;
+                    program_options_data.status |= UINT64_C(1) << OPTION_F;
                     program_options_data.arguments[OPTION_F_ARG] = optarg;
                     break;
                 }
@@ -113,14 +112,14 @@ result_t options_get(int argc, char **argv)
                 /* Option '--optc' was passed */
                 case LONG_OPT_C:
                 {
-                    program_options_data.status |= OPTION_C;
+                    program_options_data.status |= UINT64_C(1) << OPTION_C;
                     break;
                 }
 
                 /* Option '--optd' was passed */
                 case LONG_OPT_D:
                 {
-                    program_options_data.status |= OPTION_D;
+                    program_options_data.status |= UINT64_C(1) << OPTION_D;
                     program_options_data.arguments[OPTION_D_ARG] = optarg;
                     break;
                 }
@@ -217,7 +216,7 @@ bool options_is_set(option_t option)
 {
     bool option_status = false;
 
-    if (program_options_data.status & option)
+    if (program_options_data.status & (UINT64_C(1) << option))
     {
         option_status = true;
     }
@@ -234,11 +233,9 @@ char * options_get_arg(option_t option)
 {
     char *option_argument = NULL;
 
-    uint8_t index = ffsll(option) - 1;
-
-    if (index < OPTION_ARGS_NUM)
+    if (option < OPTION_ARGS_NUM)
     {
-        option_argument = program_options_data.arguments[index];
+        option_argument = program_options_data.arguments[option];
     }
 
     return option_argument;

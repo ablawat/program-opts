@@ -15,14 +15,14 @@
 typedef enum
 {
     /* Options with Required Argument */
-    OPTION_B = 0x01,    /* Option '-b'             , bit 0 */
-    OPTION_D = 0x02,    /* Option '--optd'         , bit 1 */
-    OPTION_F = 0x04,    /* Option '-f' and '--optf', bit 2 */
+    OPTION_B,    /* Option '-b'              */
+    OPTION_D,    /* Option '--optd'          */
+    OPTION_F,    /* Option '-f' and '--optf' */
 
     /* Options without Argument */
-    OPTION_A = 0x08,    /* Option '-a'             , bit 3 */
-    OPTION_C = 0x10,    /* Option '--optc'         , bit 4 */
-    OPTION_E = 0x20     /* Option '-e' and '--opte', bit 5 */
+    OPTION_A,    /* Option '-a'              */
+    OPTION_C,    /* Option '--optc'          */
+    OPTION_E     /* Option '-e' and '--opte' */
 }
 option_t;
 
