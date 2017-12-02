@@ -40,7 +40,7 @@ static options_data_t program_options_data =
     { NULL, NULL },
 
     /* Clear options bit flags */
-    UINT64_C(0),
+    { UINT64_C(0) },
 
     /* Init short option string */
     { '-', '\0', '\0' }
@@ -82,14 +82,14 @@ result_t options_get(int argc, char **argv)
                 /* Option '-a' was passed */
                 case 'a':
                 {
-                    program_options_data.status |= UINT64_C(1) << OPTION_A;
+                    program_options_data.status[OPTION_A / 64U] |= UINT64_C(1) << OPTION_A;
                     break;
                 }
 
                 /* Option '-b' was passed */
                 case 'b':
                 {
-                    program_options_data.status |= UINT64_C(1) << OPTION_B;
+                    program_options_data.status[OPTION_B / 64U] |= UINT64_C(1) << OPTION_B;
                     program_options_data.arguments[OPTION_B_ARG] = optarg;
                     break;
                 }
@@ -97,14 +97,14 @@ result_t options_get(int argc, char **argv)
                 /* Option '-e' or '--opte' was passed */
                 case 'e':
                 {
-                    program_options_data.status |= UINT64_C(1) << OPTION_E;
+                    program_options_data.status[OPTION_E / 64U] |= UINT64_C(1) << OPTION_E;
                     break;
                 }
 
                 /* Option '-f' was passed */
                 case 'f':
                 {
-                    program_options_data.status |= UINT64_C(1) << OPTION_F;
+                    program_options_data.status[OPTION_F / 64U] |= UINT64_C(1) << OPTION_F;
                     program_options_data.arguments[OPTION_F_ARG] = optarg;
                     break;
                 }
@@ -112,14 +112,14 @@ result_t options_get(int argc, char **argv)
                 /* Option '--optc' was passed */
                 case LONG_OPT_C:
                 {
-                    program_options_data.status |= UINT64_C(1) << OPTION_C;
+                    program_options_data.status[OPTION_C / 64U] |= UINT64_C(1) << OPTION_C;
                     break;
                 }
 
                 /* Option '--optd' was passed */
                 case LONG_OPT_D:
                 {
-                    program_options_data.status |= UINT64_C(1) << OPTION_D;
+                    program_options_data.status[OPTION_D / 64U] |= UINT64_C(1) << OPTION_D;
                     program_options_data.arguments[OPTION_D_ARG] = optarg;
                     break;
                 }
@@ -214,14 +214,14 @@ result_t options_get(int argc, char **argv)
 */
 bool options_is_set(option_t option)
 {
-    bool option_status = false;
+    bool is_option_set = false;
 
-    if (program_options_data.status & (UINT64_C(1) << option))
+    if (program_options_data.status[option / 64U] & (UINT64_C(1) << option))
     {
-        option_status = true;
+        is_option_set = true;
     }
 
-    return option_status;
+    return is_option_set;
 }
 
 /*

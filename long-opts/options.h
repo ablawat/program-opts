@@ -22,7 +22,9 @@ typedef enum
     /* Options without Argument */
     OPTION_A,    /* Option '-a'              */
     OPTION_C,    /* Option '--optc'          */
-    OPTION_E     /* Option '-e' and '--opte' */
+    OPTION_E,    /* Option '-e' and '--opte' */
+
+    OPTIONS_NUM
 }
 option_t;
 
@@ -48,6 +50,8 @@ enum
 
 #define OPTION_STR_SIZE 3U
 
+#define OPTION_STAT_NUM 1U
+
 /*
 ** Type: options_conf_t
 ** --------------------
@@ -68,7 +72,7 @@ options_conf_t;
 typedef struct
 {
     char      * arguments    [OPTION_ARGS_NUM];     /* Options arguments list */
-    uint64_t    status;                             /* Options status flags   */
+    uint64_t    status       [OPTION_STAT_NUM];     /* Options status flags   */
     char        short_option [OPTION_STR_SIZE];     /* Short error option     */
 }
 options_data_t;
