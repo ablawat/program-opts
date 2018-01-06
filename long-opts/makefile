@@ -4,10 +4,10 @@ CFLAGS = -O2
 long-opts: main.o options.o
 	$(CC) $(CFLAGS) -o long-opts main.o options.o
 
-main.o: main.c
+main.o: main.c result.h
 	$(CC) $(CFLAGS) -c -o main.o main.c
 
-options.o: options.c options.h
+options.o: options.c options.h result.h
 	$(CC) $(CFLAGS) -c -o options.o options.c
 
 clean:
