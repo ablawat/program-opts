@@ -33,6 +33,20 @@ static const options_conf_t program_options_config =
     }
 };
 
+/* Program Options List */
+static const options_list_t program_options_list =
+{
+    (options_list_item_t [])
+    {
+        { 'a'       , OPTION_A },
+        { 'b'       , OPTION_B },
+        { 'e'       , OPTION_E },
+        { 'f'       , OPTION_F },
+        { LONG_OPT_C, OPTION_C },
+        { LONG_OPT_D, OPTION_D }
+    }
+};
+
 /* Program Options Data */
 static options_data_t program_options_data =
 {
@@ -49,15 +63,18 @@ static options_data_t program_options_data =
 /* Program Error Option */
 const char * options_erropt = NULL;
 
-/* TBD */
+/* First No-Option Argument */
 int options_argind = 0U;
 
+/* Local function */
+option_t options_search(int option_value);
+
 /*
-** Function: options_get
-** ---------------------
+** Function: options_parse
+** -----------------------
 ** Reads Command-Line Options into Program Options Data
 */
-result_t options_get(int argc, char **argv)
+result_t options_parse(int argc, char **argv)
 {
     /* Set default return status */
     result_t result = RESULT_OK;
@@ -76,122 +93,65 @@ result_t options_get(int argc, char **argv)
         /* Next option has been read */
         if (next_option != -1)
         {
-            /* Process option */
-            switch (next_option)
+            /* Unrecognized option was passed */
+            if (next_option == '?')
             {
-                /* Option '-a' was passed */
-                case 'a':
+                if (optopt != 0)
                 {
-                    program_options_data.status[OPTION_A / 64U] |= UINT64_C(1) << OPTION_A;
-                    break;
+                    /* Set short error option */
+                    program_options_data.short_option[1] = optopt;
+                    options_erropt = program_options_data.short_option;
+                }
+                else
+                {
+                    /* Set long error option */
+                    options_erropt = argv[optind - 1];
                 }
 
-                /* Option '-b' was passed */
-                case 'b':
-                {
-                    program_options_data.status[OPTION_B / 64U] |= UINT64_C(1) << OPTION_B;
-                    program_options_data.arguments[OPTION_B_ARG] = optarg;
-                    break;
-                }
+                /* Set return status to error */
+                result = RESULT_ERROR_UNRECOGNIZED_OPTION;
 
-                /* Option '-e' or '--opte' was passed */
-                case 'e':
-                {
-                    program_options_data.status[OPTION_E / 64U] |= UINT64_C(1) << OPTION_E;
-                    break;
-                }
-
-                /* Option '-f' was passed */
-                case 'f':
-                {
-                    program_options_data.status[OPTION_F / 64U] |= UINT64_C(1) << OPTION_F;
-                    program_options_data.arguments[OPTION_F_ARG] = optarg;
-                    break;
-                }
-
-                /* Option '--optc' was passed */
-                case LONG_OPT_C:
-                {
-                    program_options_data.status[OPTION_C / 64U] |= UINT64_C(1) << OPTION_C;
-                    break;
-                }
-
-                /* Option '--optd' was passed */
-                case LONG_OPT_D:
-                {
-                    program_options_data.status[OPTION_D / 64U] |= UINT64_C(1) << OPTION_D;
-                    program_options_data.arguments[OPTION_D_ARG] = optarg;
-                    break;
-                }
-
-                /* Unrecognized option was passed */
-                case '?':
-                {
-                    if (optopt != 0)
-                    {
-                        /* Set short error option */
-                        program_options_data.short_option[1] = optopt;
-                        options_erropt = program_options_data.short_option;
-                    }
-                    else
-                    {
-                        /* Set long error option */
-                        options_erropt = argv[optind - 1];
-                    }
-
-                    /* Set return status to error */
-                    result = RESULT_ERROR_UNRECOGNIZED_OPTION;
-
-                    /* End options parsing */
-                    is_next_opt = false;
-
-                    break;
-                }
-
+                /* End options parsing */
+                is_next_opt = false;
+            }
+            else if (next_option == ':')
+            {
                 /* Option with missing argument was passed */
-                case ':':
+
+                if (*(argv[optind - 1] + 1) != '-')
                 {
-                    if (*(argv[optind - 1] + 1) != '-')
-                    {
-                        /* Set short error option */
-                        program_options_data.short_option[1] = optopt;
-                        options_erropt = program_options_data.short_option;
-                    }
-                    else
-                    {
-                        /* Set long error option */
-                        options_erropt = argv[optind - 1];
-                    }
-
-                    /* Set return status to error */
-                    result = RESULT_ERROR_MISSING_OPTION_ARG;
-
-                    /* End options parsing */
-                    is_next_opt = false;
-
-                    break;
+                    /* Set short error option */
+                    program_options_data.short_option[1] = optopt;
+                    options_erropt = program_options_data.short_option;
+                }
+                else
+                {
+                    /* Set long error option */
+                    options_erropt = argv[optind - 1];
                 }
 
-                /* Unsupported option was passed */
-                default:
+                /* Set return status to error */
+                result = RESULT_ERROR_MISSING_OPTION_ARG;
+
+                /* End options parsing */
+                is_next_opt = false;
+            }
+            else
+            {
+                /* Find option identifier */
+                option_t option = options_search(next_option);
+
+                /* Find option bit location */
+                uint16_t status_index = option / OPTIONS_STATUS_BIT;
+                uint16_t bit_number   = option % OPTIONS_STATUS_BIT;
+
+                /* Set option bit */
+                program_options_data.status[status_index] |= UINT64_C(1) << bit_number;
+
+                if (option < OPTIONS_ARGS_NUM )
                 {
-                    if (optopt != 0)
-                    {
-                        /* Set short error option */
-                        program_options_data.short_option[1] = (char)(next_option);
-                        options_erropt = program_options_data.short_option;
-                    }
-                    else
-                    {
-                        /* Set long error option */
-                        options_erropt = argv[optind - 1];
-                    }
-
-                    /* Set return status to error */
-                    result = RESULT_ERROR_UNSUPPORTED_OPTION;
-
-                    /* End options parsing */
-                    is_next_opt = false;
+                    /* Set option argument */
+                    program_options_data.arguments[option] = optarg;
                 }
             }
         }
@@ -202,21 +162,27 @@ result_t options_get(int argc, char **argv)
         }
     }
 
+    /* Set first no-option argument */
     options_argind = optind;
 
     return result;
 }
 
 /*
-** Function: options_is_set
-** ------------------------
+** Function: options_is_option_set
+** -------------------------------
 ** Checks If Option Was Recognized on Command-Line
 */
-bool options_is_set(option_t option)
+bool options_is_option_set(option_t option)
 {
     bool is_option_set = false;
 
-    if (program_options_data.status[option / 64U] & (UINT64_C(1) << option))
+    /* Find option bit location */
+    uint16_t status_index = option / OPTIONS_STATUS_BIT;
+    uint16_t bit_number   = option % OPTIONS_STATUS_BIT;
+
+    /* Get option bit */
+    if (program_options_data.status[status_index] & (UINT64_C(1) << bit_number))
     {
         is_option_set = true;
     }
@@ -225,18 +191,54 @@ bool options_is_set(option_t option)
 }
 
 /*
-** Function: options_get_arg
-** -------------------------
+** Function: options_get_option_argument
+** -------------------------------------
 ** Returns Pointer to Option Argument
 */
-char * options_get_arg(option_t option)
+char * options_get_option_argument(option_t option)
 {
     char *option_argument = NULL;
 
-    if (option < OPTION_ARGS_NUM)
+    /* Option has required argument */
+    if (option < OPTIONS_ARGS_NUM)
     {
+        /* Get option argument */
         option_argument = program_options_data.arguments[option];
     }
 
     return option_argument;
+}
+
+option_t options_search(int option_value)
+{
+    const options_list_item_t *options_list = program_options_list.options;
+
+    uint16_t lower_index = 0U;
+    uint16_t upper_index = OPTIONS_NUM - 1U;
+
+    option_t option_id = OPTIONS_NUM;
+
+    while (upper_index >= lower_index)
+    {
+        uint16_t middle_index = (lower_index + upper_index) / 2U;
+
+        if (option_value == options_list[middle_index].option_value)
+        {
+            option_id = options_list[middle_index].option_id;
+            break;
+        }
+        else
+        {
+            if (option_value > options_list[middle_index].option_value)
+            {
+                lower_index = middle_index + 1U;
+            }
+            else
+            {
+                upper_index = middle_index - 1U;
+            }
+        }
+    }
+
+    return option_id;
 }
