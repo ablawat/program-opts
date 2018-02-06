@@ -1,8 +1,92 @@
-#include <stdbool.h>
 #include <unistd.h>
 #include <string.h>
+#include <stdint.h>
+#include <getopt.h>
 
 #include "options.h"
+
+/***********************************************************************
+**                     Local Constant Definitions                     **
+***********************************************************************/
+
+/* Start identifier for long-only options */
+#define OPTIONS_LONG_START   128U
+
+/* Size of short option string */
+#define OPTIONS_STR_SIZE       3U
+
+/* Number of bits in status item */
+#define OPTIONS_STATUS_BIT    64U
+
+/*
+** Size of options status bits array
+*/
+#define OPTIONS_STATUS_NUM  (((OPTIONS_NUM - 1U) / OPTIONS_STATUS_BIT) + 1U)
+
+/*
+** Identifiers for Long Only Options
+*/
+enum
+{
+    LONG_OPT_C = (OPTIONS_LONG_START + 0U),  /* Long option '--optc' */
+    LONG_OPT_D = (OPTIONS_LONG_START + 1U)   /* Long option '--optd' */
+};
+
+/***********************************************************************
+**                       Local Type Definitions                       **
+***********************************************************************/
+
+/*
+** Type: options_conf_t
+** --------------------
+** Command-Line Options Definition
+*/
+typedef struct
+{
+    char           * options_short;    /* Config for short options */
+    struct option  * options_long;     /* Config for long options  */
+}
+options_conf_t;
+
+/*
+** Type: options_data_t
+** --------------------
+** Command-Line Options Data
+*/
+typedef struct
+{
+    char      * arguments    [OPTIONS_ARGS_NUM  ];     /* Options arguments list */
+    uint64_t    status       [OPTIONS_STATUS_NUM];     /* Options status flags   */
+    char        short_option [OPTIONS_STR_SIZE  ];     /* Short error option     */
+}
+options_data_t;
+
+/*
+** Type: options_list_item_t
+** -------------------------
+** Command-Line Options List Item
+*/
+typedef struct
+{
+    int       option_value;    /* Option getopt value */
+    option_t  option_id;       /* Option identifier */
+}
+options_list_item_t;
+
+/*
+** Type: options_list_t
+** --------------------
+** Command-Line Options List
+*/
+typedef struct
+{
+    options_list_item_t  options [OPTIONS_NUM];    /* Options array */
+}
+options_list_t;
+
+/***********************************************************************
+**                             Local Data                             **
+***********************************************************************/
 
 /* Program Options Definition */
 static const options_conf_t program_options_config =
@@ -66,8 +150,15 @@ const char * options_erropt = NULL;
 /* First No-Option Argument */
 int options_argind = 0U;
 
-/* Local function */
-option_t options_search(int option_value);
+/***********************************************************************
+**                    Local Function Declarations                     **
+***********************************************************************/
+
+option_t options_search (int option_value);
+
+/***********************************************************************
+**                    Global Function Definitions                     **
+***********************************************************************/
 
 /*
 ** Function: options_parse
@@ -111,7 +202,7 @@ result_t options_parse(int argc, char **argv)
                 /* Set return status to error */
                 result = RESULT_ERROR_UNRECOGNIZED_OPTION;
 
-                /* End options parsing */
+                /* End of options */
                 is_next_opt = false;
             }
             else if (next_option == ':')
@@ -133,7 +224,7 @@ result_t options_parse(int argc, char **argv)
                 /* Set return status to error */
                 result = RESULT_ERROR_MISSING_OPTION_ARG;
 
-                /* End options parsing */
+                /* End of options */
                 is_next_opt = false;
             }
             else
@@ -209,6 +300,15 @@ char * options_get_option_argument(option_t option)
     return option_argument;
 }
 
+/***********************************************************************
+**                     Local Function Definitions                     **
+***********************************************************************/
+
+/*
+** Function: options_search
+** ------------------------
+** Finds option identifier in options list
+*/
 option_t options_search(int option_value)
 {
     const options_list_item_t *options_list = program_options_list.options;
@@ -222,19 +322,24 @@ option_t options_search(int option_value)
     {
         uint16_t middle_index = (lower_index + upper_index) / 2U;
 
+        /* Check option value in options list */
         if (option_value == options_list[middle_index].option_value)
         {
+            /* Found option identifier in options list */
             option_id = options_list[middle_index].option_id;
             break;
         }
         else
         {
+            /* Check value on middle point */
             if (option_value > options_list[middle_index].option_value)
             {
+                /* Continue search in upper half of options list */
                 lower_index = middle_index + 1U;
             }
             else
             {
+                /* Continue search in lower half of options list */
                 upper_index = middle_index - 1U;
             }
         }
